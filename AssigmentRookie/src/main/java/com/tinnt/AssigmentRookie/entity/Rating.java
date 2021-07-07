@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -12,13 +14,8 @@ import javax.persistence.Table;
 public class Rating {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "rating_id")
 	private long rate_id;
-	
-	@Column(name = "book_id")
-	private long book_id;
-	
-	@Column(name = "email")
-	private String email;
 	
 	@Column(name = "rate")
 	private int rate;
@@ -26,15 +23,21 @@ public class Rating {
 	@Column(name = "feedback")
 	private String feedback;
 
+	@ManyToOne
+	@JoinColumn(name = "email")
+	private Account accountRate;
+	
+	@ManyToOne
+	@JoinColumn(name = "book_id")
+	private Book books;
+	
 	public Rating() {
 		super();
 	}
 
-	public Rating(long rate_id, long book_id, String email, int rate, String feedback) {
+	public Rating(long rate_id, int rate, String feedback) {
 		super();
 		this.rate_id = rate_id;
-		this.book_id = book_id;
-		this.email = email;
 		this.rate = rate;
 		this.feedback = feedback;
 	}
@@ -45,22 +48,6 @@ public class Rating {
 
 	public void setRate_id(long rate_id) {
 		this.rate_id = rate_id;
-	}
-
-	public long getBook_id() {
-		return book_id;
-	}
-
-	public void setBook_id(long book_id) {
-		this.book_id = book_id;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public int getRate() {
@@ -77,6 +64,14 @@ public class Rating {
 
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
+	}
+
+	public Account getAccountRate() {
+		return accountRate;
+	}
+
+	public void setAccountRate(Account accountRate) {
+		this.accountRate = accountRate;
 	}
 	
 }

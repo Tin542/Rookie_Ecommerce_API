@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -12,13 +15,8 @@ import javax.persistence.Table;
 public class OrderDetail {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "orider_detail_id")
 	private long orderDetailID;
-	
-	@Column(name = "order_id")
-	private long orderID;
-	
-	@Column(name = "book_id")
-	private long book_id;
 	
 	@Column(name = "amount")
 	private int amount;
@@ -30,11 +28,17 @@ public class OrderDetail {
 		super();
 	}
 	
-	public OrderDetail(long orderDetailID, long orderID, long book_id, int amount, float price) {
+	@OneToOne
+	@JoinColumn(name = "order_id")
+	private Order order;
+	
+	@ManyToOne
+    @JoinColumn(name = "book_id")
+    private Book book; 
+	
+	public OrderDetail(long orderDetailID, int amount, float price) {
 		super();
 		this.orderDetailID = orderDetailID;
-		this.orderID = orderID;
-		this.book_id = book_id;
 		this.amount = amount;
 		this.price = price;
 	}
@@ -45,14 +49,6 @@ public class OrderDetail {
 
 	public void setOrderDetailID(long orderDetailID) {
 		this.orderDetailID = orderDetailID;
-	}
-
-	public long getOrderID() {
-		return orderID;
-	}
-
-	public void setOrderID(long orderID) {
-		this.orderID = orderID;
 	}
 
 	public int getAmount() {
@@ -71,13 +67,20 @@ public class OrderDetail {
 		this.price = price;
 	}
 
-	public long getBook_id() {
-		return book_id;
+	public Order getOrder() {
+		return order;
 	}
 
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 
-	public void setBook_id(long book_id) {
-		this.book_id = book_id;
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
 	}
 	
 }

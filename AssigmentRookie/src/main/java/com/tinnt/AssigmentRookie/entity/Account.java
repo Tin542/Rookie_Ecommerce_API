@@ -1,10 +1,16 @@
 package com.tinnt.AssigmentRookie.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -29,15 +35,24 @@ public class Account {
 	@Column(name = "create_date")
 	private Date createDate;
 	
-	@Column(name = "role_id")
-	private long role_id;
 
+	@ManyToMany
+	@JoinTable (name = "accounts_roles",
+				joinColumns = @JoinColumn(name = "email"),
+				inverseJoinColumns =  @JoinColumn(name = "role_id"))
+	private List<Role> listRole = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "account")
+	private List<Order> listOrder = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "accountRate")
+	private List<Rating> listRating = new ArrayList<>();
+	
 	public Account() {
 		super();
 	}
 
-	public Account(String email, String password, String fullname, String address, String phone, Date createDate,
-			long role_id) {
+	public Account(String email, String password, String fullname, String address, String phone, Date createDate) {
 		super();
 		this.email = email;
 		this.password = password;
@@ -45,7 +60,6 @@ public class Account {
 		this.address = address;
 		this.phone = phone;
 		this.createDate = createDate;
-		this.role_id = role_id;
 	}
 
 	public String getEmail() {
@@ -95,15 +109,29 @@ public class Account {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-
-	public long getRole_id() {
-		return role_id;
+	
+	public List<Role> getListRole() {
+		return listRole;
 	}
 
-	public void setRole_id(long role_id) {
-		this.role_id = role_id;
+	public void setListRole(List<Role> listRole) {
+		this.listRole = listRole;
 	}
-	
-	
+
+	public List<Order> getListOrder() {
+		return listOrder;
+	}
+
+	public void setListOrder(List<Order> listOrder) {
+		this.listOrder = listOrder;
+	}
+
+	public List<Rating> getListRating() {
+		return listRating;
+	}
+
+	public void setListRating(List<Rating> listRating) {
+		this.listRating = listRating;
+	}
 	
 }

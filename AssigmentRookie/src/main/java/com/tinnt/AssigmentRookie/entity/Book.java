@@ -1,12 +1,17 @@
 package com.tinnt.AssigmentRookie.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,9 +26,6 @@ public class Book {
 	
 	@Column(name = "description")
 	private String description;
-	
-	@Column(name = "category_id")
-	private String category_id;
 	
 	@Column(name = "price")
 	private float price;
@@ -52,18 +54,27 @@ public class Book {
 	@Column(name = "images")
 	private String image;
 
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	private Category category;
+	
+	@OneToMany(mappedBy = "book")
+	private List<OrderDetail> listDetail = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "books")
+	private List<Rating> listRate = new ArrayList<>();
+	
 	public Book() {
 		super();
 	}
 
-	public Book(long book_id, String book_name, String description, String category_id, float price, String status,
-			String author, String publisher, String book_language, int publish_year, Date create_date, Date update_date,
-			String image) {
+	public Book(long book_id, String book_name, String description, float price, String status, String author,
+			String publisher, String book_language, int publish_year, Date create_date, Date update_date, String image,
+			Category category) {
 		super();
 		this.book_id = book_id;
 		this.book_name = book_name;
 		this.description = description;
-		this.category_id = category_id;
 		this.price = price;
 		this.status = status;
 		this.author = author;
@@ -73,6 +84,7 @@ public class Book {
 		this.create_date = create_date;
 		this.update_date = update_date;
 		this.image = image;
+		this.category = category;
 	}
 
 	public long getBook_id() {
@@ -97,14 +109,6 @@ public class Book {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getCategory_id() {
-		return category_id;
-	}
-
-	public void setCategory_id(String category_id) {
-		this.category_id = category_id;
 	}
 
 	public float getPrice() {
@@ -178,6 +182,21 @@ public class Book {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	
-	
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public List<OrderDetail> getListDetail() {
+		return listDetail;
+	}
+
+	public void setListDetail(List<OrderDetail> listDetail) {
+		this.listDetail = listDetail;
+	}
+
 }

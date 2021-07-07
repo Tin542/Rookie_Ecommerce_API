@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,10 +18,8 @@ public class Order {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "order_id")
 	private long orderID;
-	
-	@Column(name = "email")
-	private String email;
 	
 	@Column(name = "address")
 	private String address;
@@ -32,14 +33,20 @@ public class Order {
 	@Column(name = "order_date")
 	private Date orderDate;
 
+	@ManyToOne
+	@JoinColumn(name = "email")
+	private Account account;
+	
+	@OneToOne(mappedBy = "order")
+	private OrderDetail details;
+	
 	public Order() {
 		super();
 	}
 
-	public Order(long orderID, String email, String address, String phone, float totalPrice, Date orderDate) {
+	public Order(long orderID,String address, String phone, float totalPrice, Date orderDate) {
 		super();
 		this.orderID = orderID;
-		this.email = email;
 		this.address = address;
 		this.phone = phone;
 		this.totalPrice = totalPrice;
@@ -52,14 +59,6 @@ public class Order {
 
 	public void setOrderID(long orderID) {
 		this.orderID = orderID;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getAddress() {
@@ -92,6 +91,22 @@ public class Order {
 
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	public OrderDetail getDetails() {
+		return details;
+	}
+
+	public void setDetails(OrderDetail details) {
+		this.details = details;
 	}
 	
 }
