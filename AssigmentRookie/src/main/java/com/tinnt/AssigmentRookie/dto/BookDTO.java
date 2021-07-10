@@ -2,7 +2,7 @@ package com.tinnt.AssigmentRookie.dto;
 
 public class BookDTO {
 	private long id;
-	private String bookName;
+	private String book_name;
 	private String bookDescription;
 	private String bookPrice;
 	private String categoryName;
@@ -19,11 +19,11 @@ public class BookDTO {
 	}
 
 	
-	public BookDTO(long id, String bookName, String bookDescription, String bookPrice, String categoryName,
+	public BookDTO(long id, String book_name, String bookDescription, String bookPrice, String categoryName,
 			String status, String author, String publisher, String book_language, String publish_year) {
 		super();
 		this.id = id;
-		this.bookName = bookName;
+		this.book_name = book_name;
 		this.bookDescription = bookDescription;
 		this.bookPrice = bookPrice;
 		this.categoryName = categoryName;
@@ -43,14 +43,13 @@ public class BookDTO {
 		this.id = id;
 	}
 
-	public String getBookName() {
-		return bookName;
+	public String getBook_name() {
+		return book_name;
 	}
 
-	public void setBookName(String bookName) {
-		this.bookName = bookName;
+	public void setBook_name(String book_name) {
+		this.book_name = book_name;
 	}
-
 
 	public String getBookDescription() {
 		return bookDescription;
