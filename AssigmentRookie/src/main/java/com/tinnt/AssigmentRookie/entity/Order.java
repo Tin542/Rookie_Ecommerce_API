@@ -34,7 +34,7 @@ public class Order {
 	private Date orderDate;
 
 	@ManyToOne
-	@JoinColumn(name = "email")
+	@JoinColumn(name = "username")
 	private Account account;
 	
 	@OneToOne(mappedBy = "order")

@@ -79,9 +79,27 @@ public class BookServiceImpl implements BookService{
 	}
 
 	@Override
-	public BookDTO deleteBook(long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<BookDTO> getBookByCategory(long id) {
+		List<Book> listBookEntity = bookRepository.getBookByCategory(id);
+		List<BookDTO> listBookDTO = new ArrayList<BookDTO>();
+		for (Book bookEntity : listBookEntity) {
+			BookDTO bookDTO = bookConvert.toDTO(bookEntity);
+			bookDTO.setId(bookEntity.getBook_id());
+			listBookDTO.add(bookDTO);
+		}
+		return listBookDTO;
 	}
-	
+
+	@Override
+	public List<BookDTO> getBookByName(String name) {
+		List<Book> listBookEntity = bookRepository.getBookByName(name);
+		List<BookDTO> listBookDTO = new ArrayList<BookDTO>();
+		for (Book bookEntity : listBookEntity) {
+			BookDTO bookDTO = bookConvert.toDTO(bookEntity);
+			bookDTO.setId(bookEntity.getBook_id());
+			listBookDTO.add(bookDTO);
+		}
+		return listBookDTO;
+	}
+
 }

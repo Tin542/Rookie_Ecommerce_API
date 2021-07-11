@@ -17,8 +17,8 @@ import javax.persistence.Table;
 @Table(name = "accounts")
 public class Account {
 	@Id
-	@Column(name = "email")
-	private String email;
+	@Column(name = "username")
+	private String username;
 	
 	@Column(name = "password")
 	private String password;
@@ -38,7 +38,7 @@ public class Account {
 
 	@ManyToMany
 	@JoinTable (name = "accounts_roles",
-				joinColumns = @JoinColumn(name = "email"),
+				joinColumns = @JoinColumn(name = "username"),
 				inverseJoinColumns =  @JoinColumn(name = "role_id"))
 	private List<Role> listRole = new ArrayList<>();
 	
@@ -52,9 +52,9 @@ public class Account {
 		super();
 	}
 
-	public Account(String email, String password, String fullname, String address, String phone, Date createDate) {
+	public Account(String username, String password, String fullname, String address, String phone, Date createDate) {
 		super();
-		this.email = email;
+		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
 		this.address = address;
@@ -62,12 +62,12 @@ public class Account {
 		this.createDate = createDate;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {

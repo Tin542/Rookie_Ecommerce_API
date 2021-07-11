@@ -45,4 +45,17 @@ public class BookController {
 		book.setId(id);
 		return bookService.updateBook(book, id);
 	}
+	
+	@GetMapping(value = "/book/category/{categoryID}")
+	public List<BookDTO> getBookByCategoryName(@PathVariable(name = "categoryID") Long id){
+		List<BookDTO> listBooks = bookService.getBookByCategory(id);
+		return listBooks;
+	}
+	
+	@GetMapping(value = "/book/search/{bookName}")
+	public List<BookDTO> getBookByCategoryName(@PathVariable(name = "bookName") String name){
+		List<BookDTO> listBooks = bookService.getBookByName(name);
+		return listBooks;
+	}
+	
 }
