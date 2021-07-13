@@ -25,9 +25,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Book {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long book_id;
+	@Column(name = "bookId")
+	private long bookID;
 	
-	@Column(name = "book_name")
+	@Column(name = "bookName")
 	private String book_name;
 	
 	@Column(name = "description")
@@ -36,17 +37,14 @@ public class Book {
 	@Column(name = "price")
 	private float price;
 	
-	@Column(name = "status")
-	private String status;
+	@Column(name = "isDelete")
+	private boolean isDelete;
 	
 	@Column(name = "author")
 	private String author;
 	
 	@Column(name = "publisher")
 	private String publisher;
-	
-	@Column(name = "book_language")
-	private String book_language;
 	
 	@Column(name = "publish_year")
 	private int publish_year;
@@ -63,44 +61,40 @@ public class Book {
 	private String image;
 
 	@ManyToOne
-	@JoinColumn(name = "category_id")
+	@JoinColumn(name = "categoryId")
 	private Category category;
 	
-	@OneToMany(mappedBy = "book")
+	@OneToMany(mappedBy = "books")
 	private List<OrderDetail> listDetail = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "books")
+	@OneToMany(mappedBy = "book")
 	private List<Rating> listRate = new ArrayList<>();
-	
+
 	public Book() {
 		super();
 	}
 
-	public Book(long book_id, String book_name, String description, float price, String status, String author,
-			String publisher, String book_language, int publish_year, Date create_date, Date update_date, String image,
-			Category category) {
+	public Book(long bookID, String book_name, String description, float price, boolean isDelete, String author,
+			String publisher, int publish_year, String image, Category category) {
 		super();
-		this.book_id = book_id;
+		this.bookID = bookID;
 		this.book_name = book_name;
 		this.description = description;
 		this.price = price;
-		this.status = status;
+		this.isDelete = isDelete;
 		this.author = author;
 		this.publisher = publisher;
-		this.book_language = book_language;
 		this.publish_year = publish_year;
-		this.create_date = create_date;
-		this.update_date = update_date;
 		this.image = image;
 		this.category = category;
 	}
 
-	public long getBook_id() {
-		return book_id;
+	public long getBookID() {
+		return bookID;
 	}
 
-	public void setBook_id(long book_id) {
-		this.book_id = book_id;
+	public void setBookID(long bookID) {
+		this.bookID = bookID;
 	}
 
 	public String getBook_name() {
@@ -127,12 +121,12 @@ public class Book {
 		this.price = price;
 	}
 
-	public String getStatus() {
-		return status;
+	public boolean isDelete() {
+		return isDelete;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setDelete(boolean isDelete) {
+		this.isDelete = isDelete;
 	}
 
 	public String getAuthor() {
@@ -149,14 +143,6 @@ public class Book {
 
 	public void setPublisher(String publisher) {
 		this.publisher = publisher;
-	}
-
-	public String getBook_language() {
-		return book_language;
-	}
-
-	public void setBook_language(String book_language) {
-		this.book_language = book_language;
 	}
 
 	public int getPublish_year() {
@@ -207,4 +193,13 @@ public class Book {
 		this.listDetail = listDetail;
 	}
 
+	public List<Rating> getListRate() {
+		return listRate;
+	}
+
+	public void setListRate(List<Rating> listRate) {
+		this.listRate = listRate;
+	}
+	
+	
 }

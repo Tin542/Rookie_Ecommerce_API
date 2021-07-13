@@ -6,17 +6,26 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "accounts")
+@Table(name = "accounts", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
+@EntityListeners(AuditingEntityListener.class)
 public class Account {
 	@Id
+	@Column(name = "accountId")
+	private long accountID;
+	
 	@Column(name = "username")
 	private String username;
 	
@@ -26,20 +35,15 @@ public class Account {
 	@Column(name = "full_name")
 	private String fullname;
 	
-	@Column(name = "address")
-	private String address;
-	
-	@Column(name = "phone")
-	private String phone;
-	
 	@Column(name = "create_date")
+	@CreatedDate
 	private Date createDate;
 	
 
 	@ManyToMany
 	@JoinTable (name = "accounts_roles",
-				joinColumns = @JoinColumn(name = "username"),
-				inverseJoinColumns =  @JoinColumn(name = "role_id"))
+				joinColumns = @JoinColumn(name = "accountId"),
+				inverseJoinColumns =  @JoinColumn(name = "roleId"))
 	private List<Role> listRole = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "account")
@@ -52,14 +56,21 @@ public class Account {
 		super();
 	}
 
-	public Account(String username, String password, String fullname, String address, String phone, Date createDate) {
+	public Account(long accountID, String username, String password, String fullname, Date createDate) {
 		super();
+		this.accountID = accountID;
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
-		this.address = address;
-		this.phone = phone;
 		this.createDate = createDate;
+	}
+
+	public long getAccountID() {
+		return accountID;
+	}
+
+	public void setAccountID(long accountID) {
+		this.accountID = accountID;
 	}
 
 	public String getUsername() {
@@ -86,22 +97,6 @@ public class Account {
 		this.fullname = fullname;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -109,7 +104,7 @@ public class Account {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-	
+
 	public List<Role> getListRole() {
 		return listRole;
 	}
@@ -134,4 +129,5 @@ public class Account {
 		this.listRating = listRating;
 	}
 	
+
 }

@@ -26,9 +26,9 @@ public class BookConverter {
 	}
 	
 	//convert to Entity for update
-		public Book toEntity(BookDTO bookDTO, Book bookEntity) {
-			bookEntity = mapper.map(bookDTO, Book.class);	
-			bookEntity.setBook_id(bookDTO.getId());
-			return bookEntity;
-		}
+	public Book toEntity(BookDTO bookDTO, Book bookEntity) {
+		bookEntity = mapper.map(bookDTO, Book.class);	
+		bookEntity.setBookID(bookDTO.getId());
+		return bookEntity;
+	}
 }

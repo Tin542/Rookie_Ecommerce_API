@@ -18,4 +18,6 @@ public interface BookService {
 	
 	public BookDTO updateBook(BookDTO book, long id);
 	
+	public BookDTO deleteBook(long id);
+	
 }

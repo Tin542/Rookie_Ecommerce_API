@@ -17,23 +17,23 @@ public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "category_id")
+	@Column(name = "categoryId")
 	private long categoryID;
 	
-	@Column(name = "category_name")
+	@Column(name = "categoryName")
 	private String categoryName;
 
 	@OneToMany(mappedBy = "category")
 	private List<Book> listBook = new ArrayList<>();
-	
-	public Category() {
-		super();
-	}
 
 	public Category(long categoryID, String categoryName) {
 		super();
 		this.categoryID = categoryID;
 		this.categoryName = categoryName;
+	}
+
+	public Category() {
+		super();
 	}
 
 	public long getCategoryID() {
@@ -59,5 +59,5 @@ public class Category {
 	public void setListBook(List<Book> listBook) {
 		this.listBook = listBook;
 	}
-
+	
 }

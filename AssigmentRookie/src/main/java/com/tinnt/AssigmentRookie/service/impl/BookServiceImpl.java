@@ -31,8 +31,9 @@ public class BookServiceImpl implements BookService{
 	public BookDTO saveBook(BookDTO book) {
 		Category categoryEntity = categoryRepository.findOneByCategoryName(book.getCategoryName());
 		if(categoryEntity == null) {
-			throw new NotFoundException("Can not find category");
+			throw new NotFoundException("Category not exist !");
 		}
+		
 		Book bookEntity = bookConvert.toEntity(book);
 		bookEntity.setCategory(categoryEntity);
 		bookEntity = bookRepository.save(bookEntity);
@@ -45,7 +46,7 @@ public class BookServiceImpl implements BookService{
 		List<BookDTO> listBookDTO = new ArrayList<BookDTO>();
 		for (Book bookEntity : listBookEntity) {
 			BookDTO bookDTO = bookConvert.toDTO(bookEntity);
-			bookDTO.setId(bookEntity.getBook_id());
+			bookDTO.setId(bookEntity.getBookID());
 			listBookDTO.add(bookDTO);
 		}
 		return listBookDTO;
@@ -58,7 +59,7 @@ public class BookServiceImpl implements BookService{
 			throw new NotFoundException("Can not find book with id: "+id);
 		}
 		BookDTO bookDTO = bookConvert.toDTO(bookEntity);
-		bookDTO.setId(bookEntity.getBook_id());
+		bookDTO.setId(bookEntity.getBookID());
 		return bookDTO;
 	}
 
@@ -84,7 +85,7 @@ public class BookServiceImpl implements BookService{
 		List<BookDTO> listBookDTO = new ArrayList<BookDTO>();
 		for (Book bookEntity : listBookEntity) {
 			BookDTO bookDTO = bookConvert.toDTO(bookEntity);
-			bookDTO.setId(bookEntity.getBook_id());
+			bookDTO.setId(bookEntity.getBookID());
 			listBookDTO.add(bookDTO);
 		}
 		return listBookDTO;
@@ -96,10 +97,20 @@ public class BookServiceImpl implements BookService{
 		List<BookDTO> listBookDTO = new ArrayList<BookDTO>();
 		for (Book bookEntity : listBookEntity) {
 			BookDTO bookDTO = bookConvert.toDTO(bookEntity);
-			bookDTO.setId(bookEntity.getBook_id());
+			bookDTO.setId(bookEntity.getBookID());
 			listBookDTO.add(bookDTO);
 		}
 		return listBookDTO;
+	}
+
+	@Override
+	public BookDTO deleteBook(long id) {
+		Book bookEntity = bookRepository.findById(id).get();
+		if(bookEntity == null) {
+			throw new NotFoundException("Can not find book with id: "+id);
+		}
+		bookEntity.setDelete(true);
+		return bookConvert.toDTO(bookEntity);
 	}
 
 }

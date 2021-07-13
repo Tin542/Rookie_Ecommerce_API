@@ -10,12 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = "order_detail")
 public class OrderDetail {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "orider_detail_id")
+	@Column(name = "orderDetailId")
 	private long orderDetailID;
 	
 	@Column(name = "amount")
@@ -29,12 +30,12 @@ public class OrderDetail {
 	}
 	
 	@OneToOne
-	@JoinColumn(name = "order_id")
+	@JoinColumn(name = "orderId")
 	private Order order;
 	
 	@ManyToOne
-    @JoinColumn(name = "book_id")
-    private Book book; 
+    @JoinColumn(name = "bookId")
+    private Book books; 
 	
 	public OrderDetail(long orderDetailID, int amount, float price) {
 		super();
@@ -75,12 +76,12 @@ public class OrderDetail {
 		this.order = order;
 	}
 
-	public Book getBook() {
-		return book;
+	public Book getBooks() {
+		return books;
 	}
 
-	public void setBook(Book book) {
-		this.book = book;
+	public void setBooks(Book books) {
+		this.books = books;
 	}
-	
+
 }

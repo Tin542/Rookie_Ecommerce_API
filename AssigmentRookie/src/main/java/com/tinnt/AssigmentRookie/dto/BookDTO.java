@@ -4,36 +4,40 @@ public class BookDTO {
 	private long id;
 	private String book_name;
 	private String bookDescription;
-	private String bookPrice;
+	private float bookPrice;
 	private String categoryName;
-	private String status;
+	private boolean isDelete;
 	private String author;
 	private String publisher;
-	private String book_language;
-	private String publish_year;
-	
-	
+	private int publish_year;
+	private String image;
 	
 	public BookDTO() {
 		super();
 	}
 
-	
-	public BookDTO(long id, String book_name, String bookDescription, String bookPrice, String categoryName,
-			String status, String author, String publisher, String book_language, String publish_year) {
+	public BookDTO(long id, String book_name, String bookDescription, float bookPrice, String categoryName,
+			boolean isDelete, String author, String publisher, int publish_year, String image) {
 		super();
 		this.id = id;
 		this.book_name = book_name;
 		this.bookDescription = bookDescription;
 		this.bookPrice = bookPrice;
 		this.categoryName = categoryName;
-		this.status = status;
+		this.isDelete = isDelete;
 		this.author = author;
 		this.publisher = publisher;
-		this.book_language = book_language;
 		this.publish_year = publish_year;
+		this.image = image;
 	}
 
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public long getId() {
 		return id;
@@ -59,11 +63,11 @@ public class BookDTO {
 		this.bookDescription = bookDescription;
 	}
 
-	public String getBookPrice() {
+	public float getBookPrice() {
 		return bookPrice;
 	}
 
-	public void setBookPrice(String bookPrice) {
+	public void setBookPrice(float bookPrice) {
 		this.bookPrice = bookPrice;
 	}
 
@@ -75,12 +79,12 @@ public class BookDTO {
 		this.categoryName = categoryName;
 	}
 
-	public String getStatus() {
-		return status;
+	public boolean isDelete() {
+		return isDelete;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setDelete(boolean isDelete) {
+		this.isDelete = isDelete;
 	}
 
 	public String getAuthor() {
@@ -99,21 +103,12 @@ public class BookDTO {
 		this.publisher = publisher;
 	}
 
-	public String getBook_language() {
-		return book_language;
-	}
-
-	public void setBook_language(String book_language) {
-		this.book_language = book_language;
-	}
-
-	public String getPublish_year() {
+	public int getPublish_year() {
 		return publish_year;
 	}
 
-	public void setPublish_year(String publish_year) {
+	public void setPublish_year(int publish_year) {
 		this.publish_year = publish_year;
 	}
-	
 	
 }

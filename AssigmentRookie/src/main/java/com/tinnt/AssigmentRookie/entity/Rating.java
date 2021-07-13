@@ -14,8 +14,8 @@ import javax.persistence.Table;
 public class Rating {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "rating_id")
-	private long rate_id;
+	@Column(name = "ratingId")
+	private long rateID;
 	
 	@Column(name = "rate")
 	private int rate;
@@ -24,31 +24,35 @@ public class Rating {
 	private String feedback;
 
 	@ManyToOne
-	@JoinColumn(name = "email")
+	@JoinColumn(name = "accountId")
 	private Account accountRate;
 	
 	@ManyToOne
-	@JoinColumn(name = "book_id")
-	private Book books;
-	
+	@JoinColumn(name = "bookId")
+	private Book book;
+
 	public Rating() {
 		super();
 	}
 
-	public Rating(long rate_id, int rate, String feedback) {
+
+	public Rating(long rateID, int rate, String feedback) {
 		super();
-		this.rate_id = rate_id;
+		this.rateID = rateID;
 		this.rate = rate;
 		this.feedback = feedback;
 	}
 
-	public long getRate_id() {
-		return rate_id;
+
+	public long getRateID() {
+		return rateID;
 	}
 
-	public void setRate_id(long rate_id) {
-		this.rate_id = rate_id;
+
+	public void setRateID(long rateID) {
+		this.rateID = rateID;
 	}
+
 
 	public int getRate() {
 		return rate;
@@ -73,5 +77,15 @@ public class Rating {
 	public void setAccountRate(Account accountRate) {
 		this.accountRate = accountRate;
 	}
-	
+
+
+	public Book getBook() {
+		return book;
+	}
+
+
+	public void setBook(Book book) {
+		this.book = book;
+	}
+
 }

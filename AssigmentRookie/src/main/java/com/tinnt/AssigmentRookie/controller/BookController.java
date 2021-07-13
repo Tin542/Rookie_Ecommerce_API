@@ -17,45 +17,49 @@ import com.tinnt.AssigmentRookie.service.BookService;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/BookStore")
+@RequestMapping("/api/BookStore/book")
 public class BookController {
 	
 	@Autowired
 	private BookService bookService;
 	
-	@GetMapping(value = "/book")
+	@GetMapping(value = "/get-all")
 	public List<BookDTO> getAllBook(){
 		List<BookDTO> listBooks = bookService.getAllBook();
 		return listBooks;
 	}
 	
-	@GetMapping(value = "/book/{id}")
+	@GetMapping(value = "/get-by-id/{id}")
 	public BookDTO getBookByID(@PathVariable(name = "id") Long id) {
 		BookDTO book = bookService.getBookByID(id);
 		return book;
 	}
 	
-	@PostMapping(value = "/book")
+	@PostMapping(value = "/add-book")
 	public BookDTO createBook(@RequestBody BookDTO book) {
 		return bookService.saveBook(book);
 	}
 	
-	@PutMapping(value = "/book/{id}")
+	@PutMapping(value = "/update-book/{id}")
 	public BookDTO updateBook(@RequestBody BookDTO book, @PathVariable(name = "id") Long id) {
 		book.setId(id);
 		return bookService.updateBook(book, id);
 	}
 	
-	@GetMapping(value = "/book/category/{categoryID}")
+	@GetMapping(value = "/get-by-category/{categoryID}")
 	public List<BookDTO> getBookByCategoryName(@PathVariable(name = "categoryID") Long id){
 		List<BookDTO> listBooks = bookService.getBookByCategory(id);
 		return listBooks;
 	}
 	
-	@GetMapping(value = "/book/search/{bookName}")
+	@GetMapping(value = "/search/{bookName}")
 	public List<BookDTO> getBookByCategoryName(@PathVariable(name = "bookName") String name){
 		List<BookDTO> listBooks = bookService.getBookByName(name);
 		return listBooks;
 	}
 	
+	@PutMapping(value = "/delete/{id}")
+	public BookDTO deleteBook(@PathVariable(name = "id") Long id) {
+		return bookService.deleteBook(id);
+	} 
 }

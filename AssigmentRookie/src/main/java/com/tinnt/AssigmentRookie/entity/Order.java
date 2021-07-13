@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,13 +13,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 @Entity
 @Table(name = "orders")
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "order_id")
+	@Column(name = "orderId")
 	private long orderID;
 	
 	@Column(name = "address")
@@ -31,20 +36,21 @@ public class Order {
 	private float totalPrice;
 	
 	@Column(name = "order_date")
+	@CreatedDate
 	private Date orderDate;
 
 	@ManyToOne
-	@JoinColumn(name = "username")
+	@JoinColumn(name = "accountId")
 	private Account account;
 	
 	@OneToOne(mappedBy = "order")
 	private OrderDetail details;
-	
+
 	public Order() {
 		super();
 	}
 
-	public Order(long orderID,String address, String phone, float totalPrice, Date orderDate) {
+	public Order(long orderID, String address, String phone, float totalPrice, Date orderDate) {
 		super();
 		this.orderID = orderID;
 		this.address = address;
@@ -108,5 +114,6 @@ public class Order {
 	public void setDetails(OrderDetail details) {
 		this.details = details;
 	}
+	
 	
 }
