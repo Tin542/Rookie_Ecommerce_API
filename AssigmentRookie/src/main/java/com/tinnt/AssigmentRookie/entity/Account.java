@@ -2,11 +2,17 @@ package com.tinnt.AssigmentRookie.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -23,6 +29,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Account {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "accountId")
 	private long accountID;
 	
@@ -40,11 +47,11 @@ public class Account {
 	private Date createDate;
 	
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable (name = "accounts_roles",
 				joinColumns = @JoinColumn(name = "accountId"),
 				inverseJoinColumns =  @JoinColumn(name = "roleId"))
-	private List<Role> listRole = new ArrayList<>();
+	private Set<Role> roles = new HashSet<>();
 	
 	@OneToMany(mappedBy = "account")
 	private List<Order> listOrder = new ArrayList<>();
@@ -56,13 +63,11 @@ public class Account {
 		super();
 	}
 
-	public Account(long accountID, String username, String password, String fullname, Date createDate) {
+	public Account(String username, String password, String fullname) {
 		super();
-		this.accountID = accountID;
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
-		this.createDate = createDate;
 	}
 
 	public long getAccountID() {
@@ -105,14 +110,6 @@ public class Account {
 		this.createDate = createDate;
 	}
 
-	public List<Role> getListRole() {
-		return listRole;
-	}
-
-	public void setListRole(List<Role> listRole) {
-		this.listRole = listRole;
-	}
-
 	public List<Order> getListOrder() {
 		return listOrder;
 	}
@@ -128,6 +125,37 @@ public class Account {
 	public void setListRating(List<Rating> listRating) {
 		this.listRating = listRating;
 	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(accountID);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		return Objects.equals(accountID, other.accountID);
+	}
+
+	@Override
+	public String toString() {
+		return "Account [accountID=" + accountID + ", username=" + username + ", password=" + password + ", fullname="
+				+ fullname + ", createDate=" + createDate + ", roles=" + roles + ", listOrder=" + listOrder
+				+ ", listRating=" + listRating + "]";
+	}
 
 }

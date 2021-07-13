@@ -2,6 +2,8 @@ package com.tinnt.AssigmentRookie.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,35 +15,37 @@ public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "roleId")
-	private long roleID;
+	private Long roleID;
 	
-	@Column(name = "roleName")
-	private String roleName;
+	@Column(name = "roleName", length = 60)
+	@Enumerated(EnumType.STRING)
+	private ERole name;
 	
 	public Role() {
 		super();
 	}
 
-	public Role(long roleID, String roleName) {
+	public Role(Long roleID, ERole name) {
 		super();
 		this.roleID = roleID;
-		this.roleName = roleName;
+		this.name = name;
 	}
 
 	public long getRoleID() {
 		return roleID;
 	}
 
-	public void setRoleID(long roleID) {
+	public ERole getName() {
+		return name;
+	}
+
+	public void setName(ERole name) {
+		this.name = name;
+	}
+
+	public void setRoleID(Long roleID) {
 		this.roleID = roleID;
 	}
 
-	public String getRoleName() {
-		return roleName;
-	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-	
 }
