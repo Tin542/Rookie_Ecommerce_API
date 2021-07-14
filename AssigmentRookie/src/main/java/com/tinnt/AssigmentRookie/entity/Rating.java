@@ -24,7 +24,7 @@ public class Rating {
 	private String feedback;
 
 	@ManyToOne
-	@JoinColumn(name = "accountId")
+	@JoinColumn(name = "account_id")
 	private Account accountRate;
 	
 	@ManyToOne

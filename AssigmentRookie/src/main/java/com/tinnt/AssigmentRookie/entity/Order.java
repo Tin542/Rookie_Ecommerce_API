@@ -40,7 +40,7 @@ public class Order {
 	private Date orderDate;
 
 	@ManyToOne
-	@JoinColumn(name = "accountId")
+	@JoinColumn(name = "account_id")
 	private Account account;
 	
 	@OneToOne(mappedBy = "order")

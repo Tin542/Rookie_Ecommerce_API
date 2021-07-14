@@ -30,7 +30,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Account {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "accountId")
+	@Column(name = "account_id")
 	private long accountID;
 	
 	@Column(name = "username")
@@ -49,7 +49,7 @@ public class Account {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable (name = "accounts_roles",
-				joinColumns = @JoinColumn(name = "accountId"),
+				joinColumns = @JoinColumn(name = "account_id"),
 				inverseJoinColumns =  @JoinColumn(name = "roleId"))
 	private Set<Role> roles = new HashSet<>();
 	
