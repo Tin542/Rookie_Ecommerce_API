@@ -22,27 +22,27 @@ import com.tinnt.AssigmentRookie.security.service.UserDetailsServiceImpl;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
-	    // securedEnabled = true,
-	    // jsr250Enabled = true,
-	    prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
-	@Autowired
-	private UserDetailsServiceImpl userDetailsService;
+        // securedEnabled = true,
+        // jsr250Enabled = true,
+        prePostEnabled = true)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
-	@Autowired
-	private JwtUtils jwtUtils;
-	
-	@Autowired
-	private JwtAuthEntryPoint unauthorizedHandler;
-	
-	@Bean
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private JwtAuthEntryPoint unauthorizedHandler;
+
+    @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter(jwtUtils, userDetailsService);
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        // TODO
+
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
@@ -59,14 +59,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-            .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .authorizeRequests().antMatchers("/api/BookStore/auth/**").permitAll()
-            .antMatchers("/api/test/**").permitAll()
-            .anyRequest().authenticated();
+        http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+                .antMatchers("/api/BookStore/auth/**").permitAll()
+                .antMatchers("/api/BookStore/book/**").permitAll()
+                .antMatchers("/api/BookStore/category/**").permitAll()
+                .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-	
+
 }

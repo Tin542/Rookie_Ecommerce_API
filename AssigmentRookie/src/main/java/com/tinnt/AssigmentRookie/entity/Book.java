@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,23 +60,34 @@ public class Book {
 	
 	@Column(name = "images")
 	private String image;
+	
+	@Column(name = "quantity")
+	private int quantity;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "categoryId")
 	private Category category;
-	
-	@OneToMany(mappedBy = "books")
-	private List<OrderDetail> listDetail = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "book")
 	private List<Rating> listRate = new ArrayList<>();
 
 	public Book() {
 		super();
+		bookID = 0;
+		book_name = null;
+		description = null;
+		price = 0;
+		isDelete = false;
+		author= null;
+		publish_year = 0;
+		publisher = null;
+		quantity = 0;
+		image = null;
+		
 	}
 
 	public Book(long bookID, String book_name, String description, float price, boolean isDelete, String author,
-			String publisher, int publish_year, String image, Category category) {
+			String publisher, int publish_year, String image, int quantity) {
 		super();
 		this.bookID = bookID;
 		this.book_name = book_name;
@@ -86,7 +98,7 @@ public class Book {
 		this.publisher = publisher;
 		this.publish_year = publish_year;
 		this.image = image;
-		this.category = category;
+		this.quantity = quantity;
 	}
 
 	public long getBookID() {
@@ -185,14 +197,6 @@ public class Book {
 		this.category = category;
 	}
 
-	public List<OrderDetail> getListDetail() {
-		return listDetail;
-	}
-
-	public void setListDetail(List<OrderDetail> listDetail) {
-		this.listDetail = listDetail;
-	}
-
 	public List<Rating> getListRate() {
 		return listRate;
 	}
@@ -200,6 +204,13 @@ public class Book {
 	public void setListRate(List<Rating> listRate) {
 		this.listRate = listRate;
 	}
-	
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 	
 }

@@ -11,13 +11,25 @@ public class BookDTO {
 	private String publisher;
 	private int publish_year;
 	private String image;
+	private int quantity;
 	
 	public BookDTO() {
 		super();
+		id = 0;
+		book_name = null;
+		bookDescription = null;
+		bookPrice = 0;
+		categoryName = null;
+		isDelete = false;
+		author = null;
+		publish_year = 0;
+		publisher = null;
+		image = null;
+		quantity = 0;
 	}
 
 	public BookDTO(long id, String book_name, String bookDescription, float bookPrice, String categoryName,
-			boolean isDelete, String author, String publisher, int publish_year, String image) {
+			boolean isDelete, String author, String publisher, int publish_year, String image, int quantity) {
 		super();
 		this.id = id;
 		this.book_name = book_name;
@@ -29,6 +41,15 @@ public class BookDTO {
 		this.publisher = publisher;
 		this.publish_year = publish_year;
 		this.image = image;
+		this.quantity = quantity;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	public String getImage() {

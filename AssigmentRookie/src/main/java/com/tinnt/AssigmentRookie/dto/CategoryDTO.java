@@ -6,6 +6,8 @@ public class CategoryDTO {
 	
 	public CategoryDTO() {
 		super();
+		categoryID = 0;
+		categoryName = null;
 	}
 
 	public CategoryDTO(long categoryID, String categoryName) {

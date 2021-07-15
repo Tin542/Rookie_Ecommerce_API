@@ -1,7 +1,10 @@
 package com.tinnt.AssigmentRookie.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,19 +25,21 @@ public class Rating {
 	
 	@Column(name = "feedback")
 	private String feedback;
+	
+	@Column(name = "create_date")
+	private Date createDate;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "account_id")
 	private Account accountRate;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "bookId")
 	private Book book;
 
 	public Rating() {
 		super();
 	}
-
 
 	public Rating(long rateID, int rate, String feedback) {
 		super();
@@ -43,11 +48,17 @@ public class Rating {
 		this.feedback = feedback;
 	}
 
-
 	public long getRateID() {
 		return rateID;
 	}
 
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 
 	public void setRateID(long rateID) {
 		this.rateID = rateID;

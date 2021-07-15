@@ -15,18 +15,18 @@ import com.tinnt.AssigmentRookie.entity.Account;
 public class UserDetailsImpl implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long id;
 
 	private String username;
 
 	private String fullname;
-	
+
 	@JsonIgnore
-    private String password;
-	
+	private String password;
+
 	private Collection<? extends GrantedAuthority> authorities;
-	 
+
 	public UserDetailsImpl(Long id, String username, String fullname, String password,
 			Collection<? extends GrantedAuthority> authorities) {
 		super();
@@ -36,19 +36,14 @@ public class UserDetailsImpl implements UserDetails {
 		this.password = password;
 		this.authorities = authorities;
 	}
-	
-	public static UserDetailsImpl build(Account acc) {
-        List<GrantedAuthority> authorities = acc.getRoles().stream()
-            .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-            .collect(Collectors.toList());
 
-        return new UserDetailsImpl(
-        		acc.getAccountID(),
-        		acc.getUsername(),
-        		acc.getFullname(),
-        		acc.getPassword(),
-        		authorities);
-    }
+	public static UserDetailsImpl build(Account acc) {
+		List<GrantedAuthority> authorities = acc.getRoles().stream()
+				.map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
+
+		return new UserDetailsImpl(acc.getAccountID(), acc.getUsername(), acc.getFullname(), acc.getPassword(),
+				authorities);
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -56,13 +51,13 @@ public class UserDetailsImpl implements UserDetails {
 	}
 
 	public Long getId() {
-        return id;
-    }
-	
+		return id;
+	}
+
 	public String getFullname() {
-        return fullname;
-    }
-	
+		return fullname;
+	}
+
 	@Override
 	public String getPassword() {
 		return password;
@@ -75,25 +70,22 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		
+
 		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -113,7 +105,5 @@ public class UserDetailsImpl implements UserDetails {
 		UserDetailsImpl other = (UserDetailsImpl) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
 
 }
