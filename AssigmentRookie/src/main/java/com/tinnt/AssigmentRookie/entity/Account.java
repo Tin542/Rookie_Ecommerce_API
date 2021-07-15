@@ -22,10 +22,18 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "accounts", uniqueConstraints = { @UniqueConstraint(columnNames = "username") })
 @EntityListeners(AuditingEntityListener.class)
 public class Account {
@@ -57,71 +65,10 @@ public class Account {
 	@OneToOne(mappedBy = "acc")
 	private Cart cart;
 
-	public Account() {
-		super();
-	}
-
 	public Account(String username, String password, String fullname) {
-		super();
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
-	}
-
-	public long getAccountID() {
-		return accountID;
-	}
-
-	public void setAccountID(long accountID) {
-		this.accountID = accountID;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getFullname() {
-		return fullname;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public List<Order> getListOrder() {
-		return listOrder;
-	}
-
-	public void setListOrder(List<Order> listOrder) {
-		this.listOrder = listOrder;
-	}
-
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
 	}
 
 	@Override

@@ -37,12 +37,6 @@ public class CategoryController {
 	@Autowired
 	private CategoryConverter cateConvert;
 	
-	/*@GetMapping(value = "/get-all")
-	public List<CategoryDTO> getAllCategory(){
-		List<CategoryDTO> listCate = cateService.getAllCategory();
-		return listCate;
-	}*/
-	
 	@GetMapping(value = "/get-all")
 	public ResponseEntity<ResponseDTO> getAllCategory(){
 			

@@ -1,5 +1,10 @@
 package com.tinnt.AssigmentRookie.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +18,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "category")
 public class Category {
 
@@ -28,37 +37,7 @@ public class Category {
 	private List<Book> listBook = new ArrayList<>();
 
 	public Category(long categoryID, String categoryName) {
-		super();
 		this.categoryID = categoryID;
 		this.categoryName = categoryName;
 	}
-
-	public Category() {
-		super();
-	}
-
-	public long getCategoryID() {
-		return categoryID;
-	}
-
-	public void setCategoryID(long categoryID) {
-		this.categoryID = categoryID;
-	}
-
-	public String getCategoryName() {
-		return categoryName;
-	}
-
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
-
-	public List<Book> getListBook() {
-		return listBook;
-	}
-
-	public void setListBook(List<Book> listBook) {
-		this.listBook = listBook;
-	}
-	
 }

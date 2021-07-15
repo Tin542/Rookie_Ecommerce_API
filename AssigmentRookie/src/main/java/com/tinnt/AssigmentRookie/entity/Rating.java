@@ -1,5 +1,10 @@
 package com.tinnt.AssigmentRookie.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,6 +18,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "rating")
 public class Rating {
 	@Id
@@ -36,67 +45,5 @@ public class Rating {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "bookId")
 	private Book book;
-
-	public Rating() {
-		super();
-	}
-
-	public Rating(long rateID, int rate, String feedback) {
-		super();
-		this.rateID = rateID;
-		this.rate = rate;
-		this.feedback = feedback;
-	}
-
-	public long getRateID() {
-		return rateID;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public void setRateID(long rateID) {
-		this.rateID = rateID;
-	}
-
-
-	public int getRate() {
-		return rate;
-	}
-
-	public void setRate(int rate) {
-		this.rate = rate;
-	}
-
-	public String getFeedback() {
-		return feedback;
-	}
-
-	public void setFeedback(String feedback) {
-		this.feedback = feedback;
-	}
-
-	public Account getAccountRate() {
-		return accountRate;
-	}
-
-	public void setAccountRate(Account accountRate) {
-		this.accountRate = accountRate;
-	}
-
-
-	public Book getBook() {
-		return book;
-	}
-
-
-	public void setBook(Book book) {
-		this.book = book;
-	}
 
 }
