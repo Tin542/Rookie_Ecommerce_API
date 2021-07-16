@@ -61,9 +61,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-                .antMatchers("/api/BookStore/auth/**").permitAll()
-                .antMatchers("/api/BookStore/book/**").permitAll()
-                .antMatchers("/api/BookStore/category/**").permitAll()
+                .antMatchers("/BookStore/auth/**").permitAll()
+                .antMatchers("/BookStore/book/**").permitAll()
+                .antMatchers("/BookStore/category/**").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

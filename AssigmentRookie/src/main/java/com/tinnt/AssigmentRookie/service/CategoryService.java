@@ -9,7 +9,7 @@ public interface CategoryService {
 
 	public List<Category> getAllCategory();
 	
-	public Category getCategoryByName(String name);
+	public Optional<Category> getCategoryByName(String name);
 	
 	public Optional<Category> getCategoryByID(long id);
 	

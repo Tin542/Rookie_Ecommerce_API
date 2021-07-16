@@ -1,23 +1,25 @@
 package com.tinnt.AssigmentRookie.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.tinnt.AssigmentRookie.dto.BookDTO;
+import com.tinnt.AssigmentRookie.entity.Book;
 
 public interface BookService {
 	
-	public List<BookDTO> getAllBook();
+	public List<Book> getAllBook();
 	
-	public BookDTO getBookByID(long id);
+	public Optional<Book> getBookByID(long id);
 	
-	public List<BookDTO> getBookByName(String name);
+	public List<Book> getBookByName(String name);
 	
-	public List<BookDTO> getBookByCategory(long id);
+	public List<Book> getBookByCategory(long id);
 	
-	public BookDTO saveBook(BookDTO book);
+	public Book saveBook(Book book);
 	
-	public BookDTO updateBook(BookDTO book, long id);
+	public Book updateBook(Book book);
 	
-	public BookDTO deleteBook(long id);
+	public void deleteBook(long id);
 	
 }

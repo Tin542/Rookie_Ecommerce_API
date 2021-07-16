@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -34,7 +35,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "accounts", uniqueConstraints = { @UniqueConstraint(columnNames = "username") })
+@Table(name = "accounts", uniqueConstraints = {
+		@UniqueConstraint(columnNames = "username"),
+		@UniqueConstraint(columnNames = "email") })
 @EntityListeners(AuditingEntityListener.class)
 public class Account {
 	@Id
@@ -45,15 +48,28 @@ public class Account {
 	@Column(name = "username")
 	private String username;
 
+	@Column(name = "email")
+	private String email;
+
 	@Column(name = "password")
 	private String password;
 
 	@Column(name = "full_name")
 	private String fullname;
 
+	@Column(name = "address")
+	private String address;
+
+	@Column(name = "phone")
+	private String phone;
+
 	@Column(name = "create_date")
 	@CreatedDate
 	private Date createDate;
+
+	@Column(name = "update_date")
+	@LastModifiedDate
+	private Date updateDate;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "accounts_roles", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "roleId"))
@@ -65,10 +81,13 @@ public class Account {
 	@OneToOne(mappedBy = "acc")
 	private Cart cart;
 
-	public Account(String username, String password, String fullname) {
+	public Account(String username, String email, String password, String fullname, String address, String phone) {
 		this.username = username;
+		this.email = email;
 		this.password = password;
 		this.fullname = fullname;
+		this.address = address;
+		this.phone = phone;
 	}
 
 	@Override

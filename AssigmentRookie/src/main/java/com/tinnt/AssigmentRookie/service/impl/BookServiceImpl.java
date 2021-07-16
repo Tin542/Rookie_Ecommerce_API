@@ -2,6 +2,7 @@ package com.tinnt.AssigmentRookie.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,91 +27,39 @@ public class BookServiceImpl implements BookService{
 	
 	@Autowired
 	private BookConverter bookConvert;
-	
+
 	@Override
-	public BookDTO saveBook(BookDTO book) {
-		Category categoryEntity = categoryRepository.findOneByCategoryName(book.getCategoryName());
-		if(categoryEntity == null) {
-			throw new NotFoundException("Category not exist !");
-		}
-		
-		Book bookEntity = bookConvert.toEntity(book);
-		bookEntity.setCategory(categoryEntity);
-		bookEntity = bookRepository.save(bookEntity);
-		return bookConvert.toDTO(bookEntity);
+	public List<Book> getAllBook() {
+		return bookRepository.findAll();
 	}
 
 	@Override
-	public List<BookDTO> getAllBook() {
-		List<Book> listBookEntity = bookRepository.findAll();
-		List<BookDTO> listBookDTO = new ArrayList<BookDTO>();
-		for (Book bookEntity : listBookEntity) {
-			BookDTO bookDTO = bookConvert.toDTO(bookEntity);
-			bookDTO.setId(bookEntity.getBookID());
-			listBookDTO.add(bookDTO);
-		}
-		return listBookDTO;
+	public Optional<Book> getBookByID(long id) {
+		return bookRepository.findById(id);
 	}
 
 	@Override
-	public BookDTO getBookByID(long id) {
-		Book bookEntity = bookRepository.findById(id).get();
-		if(bookEntity == null) {
-			throw new NotFoundException("Can not find book with id: "+id);
-		}
-		BookDTO bookDTO = bookConvert.toDTO(bookEntity);
-		bookDTO.setId(bookEntity.getBookID());
-		return bookDTO;
+	public List<Book> getBookByName(String name) {
+		return bookRepository.getBookByName(name);
 	}
 
 	@Override
-	public BookDTO updateBook(BookDTO book, long id) {
-		Book bookEntity = bookRepository.findById(id).get();
-		if(bookEntity == null) {
-			throw new NotFoundException("Can not find book with id: "+id);
-		}
-		Category categoryEntity = categoryRepository.findOneByCategoryName(book.getCategoryName());
-		if(categoryEntity == null) {
-			throw new NotFoundException("Can not find category");
-		}
-		Book newBookEntity = bookConvert.toEntity(book, bookEntity);
-		newBookEntity.setCategory(categoryEntity);
-		newBookEntity = bookRepository.save(newBookEntity);
-		return bookConvert.toDTO(newBookEntity);
+	public List<Book> getBookByCategory(long id) {
+		return bookRepository.getBookByCategory(id);
 	}
 
 	@Override
-	public List<BookDTO> getBookByCategory(long id) {
-		List<Book> listBookEntity = bookRepository.getBookByCategory(id);
-		List<BookDTO> listBookDTO = new ArrayList<BookDTO>();
-		for (Book bookEntity : listBookEntity) {
-			BookDTO bookDTO = bookConvert.toDTO(bookEntity);
-			bookDTO.setId(bookEntity.getBookID());
-			listBookDTO.add(bookDTO);
-		}
-		return listBookDTO;
+	public Book saveBook(Book book) {
+		return bookRepository.save(book);
 	}
 
 	@Override
-	public List<BookDTO> getBookByName(String name) {
-		List<Book> listBookEntity = bookRepository.getBookByName(name);
-		List<BookDTO> listBookDTO = new ArrayList<BookDTO>();
-		for (Book bookEntity : listBookEntity) {
-			BookDTO bookDTO = bookConvert.toDTO(bookEntity);
-			bookDTO.setId(bookEntity.getBookID());
-			listBookDTO.add(bookDTO);
-		}
-		return listBookDTO;
+	public Book updateBook(Book book) {
+		return bookRepository.save(book);
 	}
 
 	@Override
-	public BookDTO deleteBook(long id) {
-		Book bookEntity = bookRepository.findById(id).get();
-		if(bookEntity == null) {
-			throw new NotFoundException("Can not find book with id: "+id);
-		}
-		bookEntity.setDelete(true);
-		return bookConvert.toDTO(bookEntity);
+	public void deleteBook(long id) {
+		bookRepository.deleteBook(id);
 	}
-
 }

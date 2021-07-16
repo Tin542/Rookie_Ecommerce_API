@@ -34,7 +34,7 @@ import com.tinnt.AssigmentRookie.security.service.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/BookStore/auth")
+@RequestMapping("/BookStore/auth")
 public class AuthController {
 
 	@Autowired
@@ -71,7 +71,10 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwt, 
         										userDetails.getId(), 
         										userDetails.getUsername(),
-        										userDetails.getFullname(), 
+        										userDetails.getFullname(),
+        										userDetails.getEmail(),
+        										userDetails.getPhone(),
+        										userDetails.getAddress(),
         										roles));
 	 }
 	 
@@ -81,11 +84,18 @@ public class AuthController {
 		 if (accRepository.existsByUsername(signUpRequest.getUsername())) {
 			 return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
 		 }
-		 
+
+		 if(accRepository.existsByEmail(signUpRequest.getEmail())){
+			 return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already taken!"));
+		 }
+
 		 //create account
-		 Account acc = new Account(signUpRequest.getUsername(), 
+		 Account acc = new Account(signUpRequest.getUsername(),
+				 					signUpRequest.getEmail(),
 				 					encode.encode(signUpRequest.getPassword()), 
-				 					signUpRequest.getFullname());
+				 					signUpRequest.getFullname(),
+				 					signUpRequest.getAddress(),
+				 					signUpRequest.getPhone());
 		 
 		 Set<String> strRoles = signUpRequest.getRole();
 	     Set<Role> roles = new HashSet<>();

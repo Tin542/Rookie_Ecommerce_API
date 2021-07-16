@@ -26,9 +26,11 @@ import com.tinnt.AssigmentRookie.exception.NotFoundException;
 import com.tinnt.AssigmentRookie.exception.UpdateException;
 import com.tinnt.AssigmentRookie.service.CategoryService;
 
+import javax.validation.Valid;
+
 @CrossOrigin
 @RestController
-@RequestMapping("/api/BookStore/category")
+@RequestMapping("/BookStore/category")
 public class CategoryController {
 	
 	@Autowired
@@ -37,7 +39,7 @@ public class CategoryController {
 	@Autowired
 	private CategoryConverter cateConvert;
 	
-	@GetMapping(value = "/get-all")
+	@GetMapping
 	public ResponseEntity<ResponseDTO> getAllCategory(){
 			
 		ResponseDTO response = new ResponseDTO();
@@ -49,7 +51,7 @@ public class CategoryController {
 				listCateDTO.add(cateDTO);
 			}
 			response.setData(listCateDTO);
-			response.setSuccessCode(SuccessCode.CATEGORY_GETALL_SUCCESS);
+			response.setSuccessCode(SuccessCode.CATEGORY_GET_SUCCESS);
 		} catch (Exception e) {
 				throw new NotFoundException("No category exist !");
 		}
@@ -61,17 +63,18 @@ public class CategoryController {
 	public ResponseEntity<ResponseDTO> getCateByName(@PathVariable(name = "name") String name){
 		ResponseDTO response = new ResponseDTO();
 		try {
-			Category cateEntity = cateService.getCategoryByName(name);
-			if(cateEntity == null) {
+			Optional<Category> optional = cateService.getCategoryByName(name);
+			if(optional.isEmpty()) {
 				response.setErrorCode(ErrorCode.CATEGORY_FIND_ERROR);
-				throw new NotFoundException("Category not found !");
+			}else{
+				Category cateEntity = optional.get();
+				response.setSuccessCode(SuccessCode.CATEGORY_FIND_SUCCESS);
+				response.setData(cateConvert.toDTO(cateEntity));
 			}
-			response.setSuccessCode(SuccessCode.CATEGORY_FIND_SUCCESS);
-			response.setData(cateConvert.toDTO(cateEntity));
+
 			
 		} catch (Exception e) {
-			response.setErrorCode(ErrorCode.CATEGORY_FIND_ERROR);
-			throw new NotFoundException("Category not found !");
+			throw new NotFoundException(e.getMessage());
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -98,8 +101,8 @@ public class CategoryController {
 	}
 	
 	//Add Category
-	@PostMapping(value = "/add-category")
-	public ResponseEntity<ResponseDTO> addCategory(@RequestBody CategoryDTO categoryDTO){
+	@PostMapping
+	public ResponseEntity<ResponseDTO> addCategory(@Valid @RequestBody CategoryDTO categoryDTO){
 		ResponseDTO responseDTO = new ResponseDTO();
 		try {
 			Category cateEntity = cateConvert.toEntity(categoryDTO);
@@ -115,8 +118,8 @@ public class CategoryController {
 	}
 	
 	//Update Category
-	@PutMapping(value = "/update-category/{id}")
-	public ResponseEntity<ResponseDTO> updateCategory(@RequestBody CategoryDTO cateDTO, @PathVariable(name = "id")Long id) {
+	@PutMapping(value = "/update/{id}")
+	public ResponseEntity<ResponseDTO> updateCategory(@Valid @RequestBody CategoryDTO cateDTO, @PathVariable(name = "id")Long id) {
 		ResponseDTO respone = new ResponseDTO();
 		try {
 			Optional<Category> cate = cateService.getCategoryByID(id);
@@ -130,10 +133,10 @@ public class CategoryController {
 			cateEntity.setCategoryName(name);
 			cateEntity.setCategoryID(id);
 			respone.setData(cateConvert.toDTO(cateEntity));
-			respone.setSuccessCode(SuccessCode.CATEGORY_UPDATE_SUCESS);
+			respone.setSuccessCode(SuccessCode.CATEGORY_UPDATE_SUCCESS);
 			
 		} catch (Exception e) {
-			respone.setErrorCode(ErrorCode.CATEGORY_UPDATE_ERRO);
+			respone.setErrorCode(ErrorCode.CATEGORY_UPDATE_ERROR);
 			throw new UpdateException("Update fail");
 		}
 		return ResponseEntity.ok().body(respone);
