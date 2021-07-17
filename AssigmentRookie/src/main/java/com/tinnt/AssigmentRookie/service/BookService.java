@@ -14,8 +14,10 @@ public interface BookService {
 	
 	public List<Book> getBookByName(String name);
 	
-	public List<Book> getBookByCategory(long id);
+	public List<Book> getBookByCategory(long cateid);
 	
 	public Book saveBook(Book book);
+
+	public void updateBookRating(long bookid);
 	
 }

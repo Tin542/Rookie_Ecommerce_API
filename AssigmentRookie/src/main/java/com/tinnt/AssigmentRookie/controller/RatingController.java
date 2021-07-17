@@ -6,12 +6,14 @@ import com.tinnt.AssigmentRookie.converter.RatingConverter;
 import com.tinnt.AssigmentRookie.dto.RatingDTO;
 import com.tinnt.AssigmentRookie.dto.ResponseDTO;
 import com.tinnt.AssigmentRookie.entity.Account;
+import com.tinnt.AssigmentRookie.entity.Book;
 import com.tinnt.AssigmentRookie.entity.Rating;
 import com.tinnt.AssigmentRookie.exception.AddException;
 import com.tinnt.AssigmentRookie.exception.DeleteException;
 import com.tinnt.AssigmentRookie.exception.NotFoundException;
 import com.tinnt.AssigmentRookie.exception.UpdateException;
 import com.tinnt.AssigmentRookie.service.AccountService;
+import com.tinnt.AssigmentRookie.service.BookService;
 import com.tinnt.AssigmentRookie.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,9 @@ public class RatingController {
     @Autowired
     private AccountService accService;
 
+    @Autowired
+    private BookService bookService;
+
     @PostMapping
     public ResponseEntity<ResponseDTO> addRating (@RequestBody RatingDTO rateDTO){
         ResponseDTO response = new ResponseDTO();
@@ -49,6 +54,9 @@ public class RatingController {
                 Rating rateEntity = rateConvert.toEntity(rateDTO);
                 rateEntity.setAccountRate(account);
                 rateEntity = rateService.addRating(rateEntity);
+
+                bookService.updateBookRating(rateDTO.getBookID());
+
                 response.setData(rateConvert.toDTO(rateEntity));
                 response.setSuccessCode(SuccessCode.RATING_ADD_SUCCESS);
             }

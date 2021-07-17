@@ -25,7 +25,7 @@ public class Rating {
     private long rateID;
 
     @Column(name = "rate")
-    private int rate;
+    private float rate;
 
     @Column(name = "feedback")
     private String feedback;

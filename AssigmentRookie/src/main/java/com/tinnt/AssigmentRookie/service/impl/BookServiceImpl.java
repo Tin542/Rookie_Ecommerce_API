@@ -1,19 +1,15 @@
 package com.tinnt.AssigmentRookie.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.tinnt.AssigmentRookie.entity.Rating;
+import com.tinnt.AssigmentRookie.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tinnt.AssigmentRookie.converter.BookConverter;
-import com.tinnt.AssigmentRookie.dto.BookDTO;
 import com.tinnt.AssigmentRookie.entity.Book;
-import com.tinnt.AssigmentRookie.entity.Category;
-import com.tinnt.AssigmentRookie.exception.NotFoundException;
 import com.tinnt.AssigmentRookie.repository.BookRepository;
-import com.tinnt.AssigmentRookie.repository.CategoryRepository;
 import com.tinnt.AssigmentRookie.service.BookService;
 
 @Service
@@ -23,10 +19,7 @@ public class BookServiceImpl implements BookService{
 	private BookRepository bookRepository;
 
 	@Autowired
-	private CategoryRepository categoryRepository;
-	
-	@Autowired
-	private BookConverter bookConvert;
+	private RatingService rateService;
 
 	@Override
 	public List<Book> getAllBook() {
@@ -51,5 +44,18 @@ public class BookServiceImpl implements BookService{
 	@Override
 	public Book saveBook(Book book) {
 		return bookRepository.save(book);
+	}
+
+	@Override
+	public void updateBookRating(long bookid) {
+		Book bookEntity  = bookRepository.findById(bookid).get();
+		List<Rating> listRating = rateService.getRatingByBookID(bookid);
+		float rate = 0;
+		for ( Rating rateEntity : listRating  ) {
+			rate += rateEntity.getRate();
+		}
+		rate = rate/listRating.size();
+		bookEntity.setRate(rate);
+		bookRepository.save(bookEntity);
 	}
 }
