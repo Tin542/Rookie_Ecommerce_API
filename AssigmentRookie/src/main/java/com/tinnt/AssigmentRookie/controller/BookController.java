@@ -190,7 +190,8 @@ public class BookController {
 				response.setErrorCode(ErrorCode.BOOK_FIND_ERROR);
 			}else{
 				Book bookEntity = optional.get();
-				bookService.deleteBook(id);
+				bookEntity.setDelete(true);
+				bookService.saveBook(bookEntity);
 
 				response.setData(bookConverter.toDTO(bookEntity));
 				response.setSuccessCode(SuccessCode.BOOK_DELETE_SUCCESS);

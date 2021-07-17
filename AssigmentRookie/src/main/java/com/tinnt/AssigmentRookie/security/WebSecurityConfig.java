@@ -3,6 +3,7 @@ package com.tinnt.AssigmentRookie.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -61,9 +62,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+
+                .antMatchers(HttpMethod.POST, "/BookStore/category/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/BookStore/category/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/BookStore/category/**").permitAll()
+
+                .antMatchers(HttpMethod.PUT, "/BookStore/book/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/BookStore/book/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/BookStore/book/**").permitAll()
+
+                .antMatchers(HttpMethod.POST, "/BookStore/rate/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.PUT, "/BookStore/rate/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/BookStore/rate/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/BookStore/rate/**").permitAll()
+
                 .antMatchers("/BookStore/auth/**").permitAll()
-                .antMatchers("/BookStore/book/**").permitAll()
-                .antMatchers("/BookStore/category/**").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

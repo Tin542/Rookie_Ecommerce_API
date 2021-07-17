@@ -1,5 +1,9 @@
 package com.tinnt.AssigmentRookie.service;
 
-public interface AccountService {
+import com.tinnt.AssigmentRookie.entity.Account;
 
+import java.util.Optional;
+
+public interface AccountService {
+    Optional<Account> findByUsername(String username);
 }

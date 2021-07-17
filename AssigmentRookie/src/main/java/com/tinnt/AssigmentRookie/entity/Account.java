@@ -71,8 +71,10 @@ public class Account {
 	@LastModifiedDate
 	private Date updateDate;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "accounts_roles", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "roleId"))
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "accounts_roles",
+			joinColumns = @JoinColumn(name = "account_id"),
+			inverseJoinColumns = @JoinColumn(name = "roleId"))
 	private Set<Role> roles = new HashSet<>();
 
 	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)

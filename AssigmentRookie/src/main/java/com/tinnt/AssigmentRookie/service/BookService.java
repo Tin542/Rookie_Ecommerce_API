@@ -18,8 +18,4 @@ public interface BookService {
 	
 	public Book saveBook(Book book);
 	
-	public Book updateBook(Book book);
-	
-	public void deleteBook(long id);
-	
 }

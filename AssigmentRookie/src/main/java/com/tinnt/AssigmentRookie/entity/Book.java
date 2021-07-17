@@ -73,6 +73,9 @@ public class Book {
 	@Column(name = "quantity")
 	private int quantity;
 
+	@Column(name = "rate")
+	private float rate;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "categoryId")
 	private Category category;

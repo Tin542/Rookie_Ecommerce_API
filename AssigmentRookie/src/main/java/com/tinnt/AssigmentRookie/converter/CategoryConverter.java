@@ -23,11 +23,5 @@ public class CategoryConverter {
 		CategoryDTO cateDTO = mapper.map(cateEntity, CategoryDTO.class);
 		return cateDTO;
 	}
-	
-	//convert to Entity for update
-	public Category toEntity(CategoryDTO cateDTO, Category cateEntity) {
-		cateEntity = mapper.map(cateDTO, Category.class);
-		cateEntity.setCategoryID(cateDTO.getCategoryID());
-		return cateEntity;
-	}
+
 }

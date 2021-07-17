@@ -8,6 +8,7 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,43 @@ public class CategoryServiceTest {
     public void getAllCategory_thenReturnListCategory() throws Exception{
         when(cateRepository.findAll()).thenReturn(list);
         assertEquals(cateService.getAllCategory(), list);
+    }
+
+    // test get by id
+    @Test
+    public void whenValidID_thenCategoryShouldBeFound() throws Exception {
+        Category cate = new Category();
+        Long CateID = 1L;
+        Optional<Category> optional = Optional.of(cate);
+        assertNotNull(optional);
+        when(cateRepository.findById(CateID)).thenReturn(optional);
+        Category cate2 = cateService.getCategoryByID(CateID).get();
+        assertEquals(cate2.getCategoryName(), cate.getCategoryName());
+    }
+
+    //test get by name
+    @Test
+    public void whenNameNotNull_thenCategoryShouldBeFound()throws Exception{
+        Category cate = new Category();
+        String name = "Comic 1";
+        Optional<Category> optional = Optional.of(cate);
+        assertNotNull(optional);
+        when(cateRepository.findByName(name)).thenReturn(optional);
+        Category cate2 = cateService.getCategoryByName(name).get();
+        assertEquals(cate,cate2);
+    }
+
+    // test update category
+    @Test
+    public void updateCate_ThenReturnCategory() throws Exception {
+        Category cate = new Category();
+        Long CateID = 1L;
+        Optional<Category> optional = Optional.of(cate);
+        assertNotNull(optional);
+        when(cateRepository.findById(CateID)).thenReturn(optional);
+        when(cateRepository.save(optional.get())).thenReturn(cate);
+        Category cate2 = cateService.updateCategory(cate);
+        assertEquals(cate2.getCategoryName(), cate.getCategoryName());
     }
 
 }

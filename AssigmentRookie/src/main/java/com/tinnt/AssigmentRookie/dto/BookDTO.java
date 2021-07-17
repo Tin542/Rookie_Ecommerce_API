@@ -49,4 +49,6 @@ public class BookDTO {
 	@NotNull
 	private int quantity;
 
+	private float rate;
+
 }

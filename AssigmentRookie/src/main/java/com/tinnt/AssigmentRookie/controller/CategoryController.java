@@ -30,7 +30,7 @@ import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/BookStore/category")
+@RequestMapping("BookStore/category")
 public class CategoryController {
 	
 	@Autowired
