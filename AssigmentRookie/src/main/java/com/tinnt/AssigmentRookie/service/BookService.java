@@ -5,16 +5,18 @@ import java.util.Optional;
 
 import com.tinnt.AssigmentRookie.dto.BookDTO;
 import com.tinnt.AssigmentRookie.entity.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BookService {
 	
-	public List<Book> getAllBook();
+	public Page<Book> getAllBook(Pageable pageable);
 	
 	public Optional<Book> getBookByID(long id);
 	
-	public List<Book> getBookByName(String name);
+	public Page<Book> getBookByName(String name, Pageable pageable);
 	
-	public List<Book> getBookByCategory(long cateid);
+	public Page<Book> getBookByCategory(long cateid, Pageable pageable);
 	
 	public Book saveBook(Book book);
 

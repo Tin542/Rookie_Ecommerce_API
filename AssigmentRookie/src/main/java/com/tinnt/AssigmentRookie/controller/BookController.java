@@ -1,6 +1,7 @@
 package com.tinnt.AssigmentRookie.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,15 +17,11 @@ import com.tinnt.AssigmentRookie.exception.NotFoundException;
 import com.tinnt.AssigmentRookie.exception.UpdateException;
 import com.tinnt.AssigmentRookie.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.tinnt.AssigmentRookie.dto.BookDTO;
 import com.tinnt.AssigmentRookie.service.BookService;
@@ -35,7 +32,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/BookStore/book")
 public class BookController {
-	
+
 	@Autowired
 	private BookService bookService;
 
@@ -100,16 +97,30 @@ public class BookController {
 	}
 
 	@GetMapping
-	public ResponseEntity<ResponseDTO> getAllBook(){
+	public ResponseEntity<ResponseDTO> getAllBook(@RequestParam(defaultValue = "0") int page,
+												  @RequestParam(defaultValue = "3") int size){
 		ResponseDTO response = new ResponseDTO();
 		try {
-			List<Book> listBookEntity = bookService.getAllBook();
+			List<Book> listBookEntity = new ArrayList<>();
+			Pageable paging = PageRequest.of(page, size);
+			Page<Book> pageBook = bookService.getAllBook(paging);
+
+			//retrieve the List of items in the page.
+			listBookEntity = pageBook.getContent();
+
 			List<BookDTO> listBookDTO = new ArrayList<>();
 			for(Book bookEntity : listBookEntity) {
 				BookDTO bookDTO = bookConverter.toDTO(bookEntity);
 				listBookDTO.add(bookDTO);
 			}
-			response.setData(listBookDTO);
+
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("Books",listBookDTO);
+			map.put("currentPage", pageBook.getNumber());//current Page.
+			map.put("totalItems", pageBook.getTotalElements());//total items stored in database.
+			map.put("totalPages", pageBook.getTotalPages());//number of total pages.
+
+			response.setData(map);
 			response.setSuccessCode(SuccessCode.BOOK_GET_SUCCESS);
 		}catch (Exception e){
 			response.setErrorCode(ErrorCode.BOOK_GET_ERROR);
@@ -137,21 +148,30 @@ public class BookController {
 	}
 
 	@GetMapping(value = "/search/{name}")
-	public ResponseEntity<ResponseDTO> searchBook(@PathVariable(name = "name")String name){
+	public ResponseEntity<ResponseDTO> searchBook(@PathVariable(name = "name")String name,
+												  @RequestParam(defaultValue = "0") int page,
+												  @RequestParam(defaultValue = "3") int size){//number item of page
 		ResponseDTO response = new ResponseDTO();
 		try {
-			List<Book> listBookEntity = bookService.getBookByName(name);
-			if(listBookEntity.isEmpty()){
-				response.setErrorCode(ErrorCode.BOOK_FIND_ERROR);
-			}else{
-				List<BookDTO> listBookDTO = new ArrayList<>();
-				for(Book bookEntity : listBookEntity) {
-					BookDTO bookDTO = bookConverter.toDTO(bookEntity);
-					listBookDTO.add(bookDTO);
-				}
-				response.setData(listBookDTO);
-				response.setSuccessCode(SuccessCode.BOOK_FIND_SUCCESS);
+			List<Book> listBookEntity = new ArrayList<>();
+			Pageable paging = PageRequest.of(page, size);
+			Page<Book> pageBook = bookService.getBookByName(name,paging);
+
+			//retrieve the List of items in the page.
+			listBookEntity = pageBook.getContent();
+			List<BookDTO> listBookDTO = new ArrayList<>();
+			for(Book bookEntity : listBookEntity) {
+				BookDTO bookDTO = bookConverter.toDTO(bookEntity);
+				listBookDTO.add(bookDTO);
 			}
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("Books",listBookDTO);
+			map.put("currentPage", pageBook.getNumber());//current Page.
+			map.put("totalItems", pageBook.getTotalElements());//total items stored in database.
+			map.put("totalPages", pageBook.getTotalPages());//number of total pages.
+
+			response.setData(map);
+			response.setSuccessCode(SuccessCode.BOOK_GET_SUCCESS);
 
 		}catch(Exception e){
 			throw new NotFoundException(e.getMessage());
@@ -160,10 +180,17 @@ public class BookController {
 	}
 
 	@GetMapping(value = "/search-by-cate/{cateId}")
-	public ResponseEntity<ResponseDTO> searchBookByCateId(@PathVariable(name = "cateId")long id){
+	public ResponseEntity<ResponseDTO> searchBookByCateId(@PathVariable(name = "cateId")long id,
+														  @RequestParam(defaultValue = "0")int page,
+														  @RequestParam(defaultValue = "3")int size){
 		ResponseDTO response = new ResponseDTO();
 		try {
-			List<Book> listBookEntity = bookService.getBookByCategory(id);
+			List<Book> listBookEntity = new ArrayList<>();
+			Pageable paging = PageRequest.of(page, size);
+			Page<Book> pageBook = bookService.getBookByCategory(id, paging);
+
+			////retrieve the List of items in the page.
+			listBookEntity = pageBook.getContent();
 			if(listBookEntity.isEmpty()){
 				response.setErrorCode(ErrorCode.BOOK_FIND_ERROR);
 			}else{
@@ -172,9 +199,17 @@ public class BookController {
 					BookDTO bookDTO = bookConverter.toDTO(bookEntity);
 					listBookDTO.add(bookDTO);
 				}
-				response.setData(listBookDTO);
+
+				HashMap<String, Object> map = new HashMap<>();
+				map.put("Books",listBookDTO);
+				map.put("currentPage", pageBook.getNumber());//current Page.
+				map.put("totalItems", pageBook.getTotalElements());//total items stored in database.
+				map.put("totalPages", pageBook.getTotalPages());//number of total pages.
+
+				response.setData(map);
 				response.setSuccessCode(SuccessCode.BOOK_FIND_SUCCESS);
 			}
+
 		}catch(Exception e){
 			throw new NotFoundException(e.getMessage());
 		}

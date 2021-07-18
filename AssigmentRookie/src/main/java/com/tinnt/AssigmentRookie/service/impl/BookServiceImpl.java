@@ -6,6 +6,8 @@ import java.util.Optional;
 import com.tinnt.AssigmentRookie.entity.Rating;
 import com.tinnt.AssigmentRookie.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tinnt.AssigmentRookie.entity.Book;
@@ -22,8 +24,8 @@ public class BookServiceImpl implements BookService{
 	private RatingService rateService;
 
 	@Override
-	public List<Book> getAllBook() {
-		return bookRepository.findAll();
+	public Page<Book> getAllBook(Pageable pageable) {
+		return bookRepository.findAllBook(pageable);
 	}
 
 	@Override
@@ -32,13 +34,13 @@ public class BookServiceImpl implements BookService{
 	}
 
 	@Override
-	public List<Book> getBookByName(String name) {
-		return bookRepository.getBookByName(name);
+	public Page<Book> getBookByName(String name, Pageable pageable) {
+		return bookRepository.getBookByName(name, pageable);
 	}
 
 	@Override
-	public List<Book> getBookByCategory(long id) {
-		return bookRepository.getBookByCategory(id);
+	public Page<Book> getBookByCategory(long id, Pageable pageable) {
+		return bookRepository.getBookByCategory(id, pageable);
 	}
 
 	@Override
