@@ -91,7 +91,7 @@ public class CategoryServiceTest {
         assertNotNull(optional);
         when(cateRepository.findById(CateID)).thenReturn(optional);
         when(cateRepository.save(optional.get())).thenReturn(cate);
-        Category cate2 = cateService.updateCategory(cate);
+        Category cate2 = cateService.updateCategory(cate,CateID);
         assertEquals(cate2.getCategoryName(), cate.getCategoryName());
     }
 

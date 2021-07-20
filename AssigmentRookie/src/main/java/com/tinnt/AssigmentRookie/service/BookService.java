@@ -16,10 +16,12 @@ public interface BookService {
 	
 	public Page<Book> getBookByName(String name, Pageable pageable);
 	
-	public Page<Book> getBookByCategory(long cateid, Pageable pageable);
+	public Page<Book> getBookByCategory(long cateID, Pageable pageable);
 	
 	public Book saveBook(Book book);
 
-	public void updateBookRating(long bookid);
+	public Book updateBook(Book book, long id);
+
+	public void updateBookRating(long bookID);
 	
 }

@@ -63,20 +63,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
 
-                .antMatchers(HttpMethod.POST, "/BookStore/category/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/BookStore/category/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/BookStore/category/**").permitAll()
+                .antMatchers("/category/admin/**").hasRole("ADMIN")
+                .antMatchers("/category/user/**").hasRole("USER")
+                .antMatchers("/category/**").permitAll()
 
-                .antMatchers(HttpMethod.PUT, "/BookStore/book/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/BookStore/book/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/BookStore/book/**").permitAll()
+                .antMatchers("/book/admin/**").hasRole("ADMIN")
+                .antMatchers("/book/user/**").hasRole("USER")
+                .antMatchers("/book/**").permitAll()
 
-                .antMatchers(HttpMethod.POST, "/BookStore/rate/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.PUT, "/BookStore/rate/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/BookStore/rate/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/BookStore/rate/**").permitAll()
+                .antMatchers("/rate/all/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/rate/**").permitAll()
 
-                .antMatchers("/BookStore/auth/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

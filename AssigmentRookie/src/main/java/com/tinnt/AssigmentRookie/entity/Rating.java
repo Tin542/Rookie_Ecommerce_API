@@ -17,7 +17,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "rating")
+@Table(name = "rating", indexes = {
+        @Index(name = "rate_idx", columnList = "ratingId")
+})
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

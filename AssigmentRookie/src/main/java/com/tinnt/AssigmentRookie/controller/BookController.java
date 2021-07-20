@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.tinnt.AssigmentRookie.constans.ErrorCode;
 import com.tinnt.AssigmentRookie.constans.SuccessCode;
@@ -30,17 +31,19 @@ import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/BookStore/book")
+@RequestMapping("/book")
 public class BookController {
 
-	@Autowired
 	private BookService bookService;
-
-	@Autowired
 	private CategoryService cateService;
+	private BookConverter bookConverter;
 
 	@Autowired
-	private BookConverter bookConverter;
+	public BookController(BookService bookService, CategoryService cateService, BookConverter bookConverter) {
+		this.bookService = bookService;
+		this.cateService = cateService;
+		this.bookConverter = bookConverter;
+	}
 
 	@PostMapping
 	public ResponseEntity<ResponseDTO> addBook(@Valid @RequestBody BookDTO bookDTO){
@@ -70,26 +73,10 @@ public class BookController {
 	public ResponseEntity<ResponseDTO> updateBook(@Valid @RequestBody BookDTO bookDTO, @PathVariable(name = "id") long id){
 		ResponseDTO response = new ResponseDTO();
 		try {
-			Optional<Book> optional = bookService.getBookByID(id);
-			if(optional.isEmpty()){
-				response.setErrorCode(ErrorCode.BOOK_FIND_ERROR);
-				throw new NotFoundException("Book not found !");
-			}else{
-				Book bookEntity = optional.get();
-				Optional<Category> optionalCategory = cateService.getCategoryByName(bookDTO.getCategoryName());
-				if(optionalCategory.isEmpty()){
-					response.setErrorCode(ErrorCode.CATEGORY_FIND_ERROR);
-				}else{
-					Category cateEntity = optionalCategory.get();
-					bookEntity = bookConverter.toEntity(bookDTO);
-					bookEntity.setCategory(cateEntity);
-					bookEntity.setBookID(id);
-					bookEntity = bookService.saveBook(bookEntity);
-
-					response.setData(bookConverter.toDTO(bookEntity));
-					response.setSuccessCode(SuccessCode.BOOK_UPDATE_SUCCESS);
-				}
-			}
+			Book bookEntity = bookConverter.toEntity(bookDTO);
+			bookEntity = bookService.updateBook(bookEntity, id);
+			response.setData(bookConverter.toDTO(bookEntity));
+			response.setSuccessCode(SuccessCode.BOOK_UPDATE_SUCCESS);
 		}catch(Exception e){
 			throw new UpdateException(e.getMessage());
 		}
@@ -108,11 +95,9 @@ public class BookController {
 			//retrieve the List of items in the page.
 			listBookEntity = pageBook.getContent();
 
-			List<BookDTO> listBookDTO = new ArrayList<>();
-			for(Book bookEntity : listBookEntity) {
-				BookDTO bookDTO = bookConverter.toDTO(bookEntity);
-				listBookDTO.add(bookDTO);
-			}
+			List<BookDTO> listBookDTO = listBookEntity.stream()
+					.map(bookConverter::toDTO)
+					.collect(Collectors.toList());
 
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("Books",listBookDTO);
@@ -123,7 +108,7 @@ public class BookController {
 			response.setData(map);
 			response.setSuccessCode(SuccessCode.BOOK_GET_SUCCESS);
 		}catch (Exception e){
-			response.setErrorCode(ErrorCode.BOOK_GET_ERROR);
+			response.setErrorCode(e.getMessage());
 		}
 		return ResponseEntity.ok().body(response);
 	}
@@ -132,15 +117,9 @@ public class BookController {
 	public ResponseEntity<ResponseDTO> getBookById(@PathVariable(name = "id")long id){
 		ResponseDTO response = new ResponseDTO();
 		try {
-			Optional<Book> optional = bookService.getBookByID(id);
-			if(optional.isPresent()){
-				Book bookEntity = optional.get();
-				response.setData(bookConverter.toDTO(bookEntity));
-				response.setSuccessCode(SuccessCode.BOOK_FIND_SUCCESS);
-			}else{
-				response.setErrorCode(ErrorCode.BOOK_FIND_ERROR);
-			}
-
+			Book bookEntity = bookService.getBookByID(id).get();
+			response.setData(bookConverter.toDTO(bookEntity));
+			response.setSuccessCode(SuccessCode.BOOK_FIND_SUCCESS);
 		}catch (Exception e){
 			throw new NotFoundException(e.getMessage());
 		}
@@ -153,17 +132,15 @@ public class BookController {
 												  @RequestParam(defaultValue = "3") int size){//number item of page
 		ResponseDTO response = new ResponseDTO();
 		try {
-			List<Book> listBookEntity = new ArrayList<>();
 			Pageable paging = PageRequest.of(page, size);
 			Page<Book> pageBook = bookService.getBookByName(name,paging);
 
 			//retrieve the List of items in the page.
-			listBookEntity = pageBook.getContent();
-			List<BookDTO> listBookDTO = new ArrayList<>();
-			for(Book bookEntity : listBookEntity) {
-				BookDTO bookDTO = bookConverter.toDTO(bookEntity);
-				listBookDTO.add(bookDTO);
-			}
+			List<Book> listBookEntity = pageBook.getContent();
+			List<BookDTO> listBookDTO = listBookEntity.stream()
+					.map(bookConverter::toDTO)
+					.collect(Collectors.toList());
+
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("Books",listBookDTO);
 			map.put("currentPage", pageBook.getNumber());//current Page.
@@ -191,24 +168,19 @@ public class BookController {
 
 			////retrieve the List of items in the page.
 			listBookEntity = pageBook.getContent();
-			if(listBookEntity.isEmpty()){
-				response.setErrorCode(ErrorCode.BOOK_FIND_ERROR);
-			}else{
-				List<BookDTO> listBookDTO = new ArrayList<>();
-				for (Book bookEntity : listBookEntity) {
-					BookDTO bookDTO = bookConverter.toDTO(bookEntity);
-					listBookDTO.add(bookDTO);
-				}
 
-				HashMap<String, Object> map = new HashMap<>();
-				map.put("Books",listBookDTO);
-				map.put("currentPage", pageBook.getNumber());//current Page.
-				map.put("totalItems", pageBook.getTotalElements());//total items stored in database.
-				map.put("totalPages", pageBook.getTotalPages());//number of total pages.
+			List<BookDTO> listBookDTO = listBookEntity.stream()
+					.map(bookConverter::toDTO)
+					.collect(Collectors.toList());
+
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("Books",listBookDTO);
+			map.put("currentPage", pageBook.getNumber());//current Page.
+			map.put("totalItems", pageBook.getTotalElements());//total items stored in database.
+			map.put("totalPages", pageBook.getTotalPages());//number of total pages.
 
 				response.setData(map);
 				response.setSuccessCode(SuccessCode.BOOK_FIND_SUCCESS);
-			}
 
 		}catch(Exception e){
 			throw new NotFoundException(e.getMessage());

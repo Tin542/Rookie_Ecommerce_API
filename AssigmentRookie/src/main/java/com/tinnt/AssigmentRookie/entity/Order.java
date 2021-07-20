@@ -1,5 +1,6 @@
 package com.tinnt.AssigmentRookie.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -17,9 +18,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "orders")
+@Table(name = "orders",
+		indexes = {
+				@Index(name = "order_idx", columnList = "orderId")
+		})
 @EntityListeners(AuditingEntityListener.class)
-public class Order {
+public class Order implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

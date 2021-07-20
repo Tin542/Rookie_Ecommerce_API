@@ -15,5 +15,5 @@ public interface CategoryService {
 	
 	public Category addCategory(Category category);
 	
-	public Category updateCategory(Category category);
+	public Category updateCategory(Category category, long id);
 }

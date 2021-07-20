@@ -1,4 +1,4 @@
-package com.tinnt.AssigmentRookie.entity;
+package com.tinnt.AssigmentRookie.constans;
 
 public enum EStatus {
     PROCESSING,

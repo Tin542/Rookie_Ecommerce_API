@@ -23,25 +23,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/BookStore/rate")
+@RequestMapping("/rate")
 public class RatingController {
 
-    @Autowired
     private RatingConverter rateConvert;
-
-    @Autowired
     private RatingService rateService;
-
-    @Autowired
     private AccountService accService;
-
-    @Autowired
     private BookService bookService;
 
-    @PostMapping
+    @Autowired
+    public RatingController(RatingConverter rateConvert, RatingService rateService, AccountService accService, BookService bookService) {
+        this.rateConvert = rateConvert;
+        this.rateService = rateService;
+        this.accService = accService;
+        this.bookService = bookService;
+    }
+
+    @PostMapping(value = "/all")
     public ResponseEntity<ResponseDTO> addRating (@RequestBody RatingDTO rateDTO){
         ResponseDTO response = new ResponseDTO();
         try {
@@ -68,7 +70,7 @@ public class RatingController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/all/{id}")
     public ResponseEntity<ResponseDTO> editRating(@PathVariable(name = "id")Long id, @RequestBody RatingDTO rateDTO){
         ResponseDTO response = new ResponseDTO();
         try {
@@ -97,7 +99,7 @@ public class RatingController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/all/{id}")
     public ResponseEntity<ResponseDTO> deleteRating(@PathVariable(name = "id")Long id){
         ResponseDTO response = new ResponseDTO();
         try {
@@ -124,11 +126,10 @@ public class RatingController {
             if(listRatingEntity.isEmpty()){
                 response.setErrorCode(ErrorCode.RATING_FIND_ERROR);
             }else{
-                List<RatingDTO> listRatingDTO = new ArrayList<>();
-                for ( Rating rateEntity : listRatingEntity ) {
-                    RatingDTO rateDTO = rateConvert.toDTO(rateEntity);
-                    listRatingDTO.add(rateDTO);
-                }
+                List<RatingDTO> listRatingDTO = listRatingEntity.stream()
+                        .map(rateConvert::toDTO)
+                        .collect(Collectors.toList());
+
                 response.setData(listRatingDTO);
                 response.setSuccessCode(SuccessCode.RATING_FIND_SUCCESS);
             }

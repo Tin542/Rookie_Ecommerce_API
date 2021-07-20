@@ -1,5 +1,6 @@
 package com.tinnt.AssigmentRookie.entity;
 
+import com.tinnt.AssigmentRookie.constans.EStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tinnt.AssigmentRookie.entity.Account;
-import com.tinnt.AssigmentRookie.entity.ERole;
+import com.tinnt.AssigmentRookie.constans.ERole;
 import com.tinnt.AssigmentRookie.entity.Role;
 import com.tinnt.AssigmentRookie.payload.request.LoginRequest;
 import com.tinnt.AssigmentRookie.payload.request.SignupRequest;
@@ -34,7 +34,7 @@ import com.tinnt.AssigmentRookie.security.service.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/BookStore/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
 	@Autowired
