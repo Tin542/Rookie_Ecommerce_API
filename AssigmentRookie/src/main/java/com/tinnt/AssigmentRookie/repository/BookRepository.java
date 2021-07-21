@@ -22,4 +22,8 @@ public interface BookRepository extends JpaRepository<Book, Long>{
 	@Query(value = "select * from books", nativeQuery = true)
 	Page<Book> findAllBook(Pageable page);
 
+	@Query(value = "SELECT * FROM books p WHERE CONCAT(p.book_name, p.category_id) LIKE %?1%"
+			, nativeQuery = true)
+	Page<Book> searchBook(String keyword, Pageable pageable);
+
 }

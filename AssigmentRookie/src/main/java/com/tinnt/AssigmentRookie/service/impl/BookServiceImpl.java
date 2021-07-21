@@ -123,4 +123,14 @@ public class BookServiceImpl implements BookService{
 		bookEntity.setRate(rate);
 		bookRepository.save(bookEntity);
 	}
+
+	@Override
+	public Page<Book> searchBook(String keyword, Pageable pageable) throws NotFoundException{
+		Page<Book> optional = bookRepository.searchBook(keyword, pageable);
+		if(optional.isEmpty()){
+			LOGGER.info("Books not found !");
+			throw new NotFoundException(ErrorCode.BOOK_FIND_ERROR);
+		}
+		return bookRepository.searchBook(keyword, pageable);
+	}
 }

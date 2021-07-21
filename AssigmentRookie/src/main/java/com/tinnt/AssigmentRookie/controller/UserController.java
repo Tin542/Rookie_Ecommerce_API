@@ -6,44 +6,37 @@ import com.tinnt.AssigmentRookie.converter.RatingConverter;
 import com.tinnt.AssigmentRookie.dto.RatingDTO;
 import com.tinnt.AssigmentRookie.dto.ResponseDTO;
 import com.tinnt.AssigmentRookie.entity.Account;
-import com.tinnt.AssigmentRookie.entity.Book;
 import com.tinnt.AssigmentRookie.entity.Rating;
 import com.tinnt.AssigmentRookie.exception.AddException;
 import com.tinnt.AssigmentRookie.exception.DeleteException;
-import com.tinnt.AssigmentRookie.exception.NotFoundException;
 import com.tinnt.AssigmentRookie.exception.UpdateException;
 import com.tinnt.AssigmentRookie.service.AccountService;
 import com.tinnt.AssigmentRookie.service.BookService;
 import com.tinnt.AssigmentRookie.service.RatingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/rate")
-public class RatingController {
+@RequestMapping("/user")
+public class UserController {
 
     private RatingConverter rateConvert;
     private RatingService rateService;
     private AccountService accService;
     private BookService bookService;
 
-    @Autowired
-    public RatingController(RatingConverter rateConvert, RatingService rateService, AccountService accService, BookService bookService) {
+    public UserController(RatingConverter rateConvert, RatingService rateService, AccountService accService, BookService bookService) {
         this.rateConvert = rateConvert;
         this.rateService = rateService;
         this.accService = accService;
         this.bookService = bookService;
     }
 
-    @PostMapping(value = "/all")
+    //add rating
+    @PostMapping(value = "/rating")
     public ResponseEntity<ResponseDTO> addRating (@RequestBody RatingDTO rateDTO){
         ResponseDTO response = new ResponseDTO();
         try {
@@ -70,6 +63,7 @@ public class RatingController {
         return ResponseEntity.ok().body(response);
     }
 
+    //Edit rate
     @PutMapping(value = "/all/{id}")
     public ResponseEntity<ResponseDTO> editRating(@PathVariable(name = "id")Long id, @RequestBody RatingDTO rateDTO){
         ResponseDTO response = new ResponseDTO();
@@ -99,6 +93,7 @@ public class RatingController {
         return ResponseEntity.ok().body(response);
     }
 
+    //delete rate
     @DeleteMapping(value = "/all/{id}")
     public ResponseEntity<ResponseDTO> deleteRating(@PathVariable(name = "id")Long id){
         ResponseDTO response = new ResponseDTO();
@@ -114,28 +109,6 @@ public class RatingController {
         }catch (Exception e){
             response.setData(false);
             throw new DeleteException(e.getMessage());
-        }
-        return ResponseEntity.ok().body(response);
-    }
-
-    @GetMapping(value = "/{bookID}")
-    public ResponseEntity<ResponseDTO> getRatingByBookID(@PathVariable(name = "bookID")Long id){
-        ResponseDTO response = new ResponseDTO();
-        try {
-            List<Rating> listRatingEntity = rateService.getRatingByBookID(id);
-            if(listRatingEntity.isEmpty()){
-                response.setErrorCode(ErrorCode.RATING_FIND_ERROR);
-            }else{
-                List<RatingDTO> listRatingDTO = listRatingEntity.stream()
-                        .map(rateConvert::toDTO)
-                        .collect(Collectors.toList());
-
-                response.setData(listRatingDTO);
-                response.setSuccessCode(SuccessCode.RATING_FIND_SUCCESS);
-            }
-
-        }catch (Exception e){
-            throw new NotFoundException(e.getMessage());
         }
         return ResponseEntity.ok().body(response);
     }

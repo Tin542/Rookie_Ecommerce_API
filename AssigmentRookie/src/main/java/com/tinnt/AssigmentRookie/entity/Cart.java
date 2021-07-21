@@ -1,7 +1,9 @@
 package com.tinnt.AssigmentRookie.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -40,5 +42,8 @@ public class Cart implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "account_id", referencedColumnName = "account_id")
 	private Account acc;
+
+	@OneToMany(mappedBy = "cart",fetch = FetchType.LAZY)
+	private List<CartItem> listCartItem = new ArrayList<>();
 
 }

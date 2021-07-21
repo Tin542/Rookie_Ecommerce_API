@@ -23,5 +23,7 @@ public interface BookService {
 	public Book updateBook(Book book, long id);
 
 	public void updateBookRating(long bookID);
+
+	public Page<Book> searchBook(String keyword, Pageable pageable);
 	
 }
