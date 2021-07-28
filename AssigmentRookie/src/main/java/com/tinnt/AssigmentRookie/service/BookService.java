@@ -15,7 +15,7 @@ public interface BookService {
 	public Optional<Book> getBookByID(long id);
 	
 	public Page<Book> getBookByName(String name, Pageable pageable);
-	
+
 	public Page<Book> getBookByCategory(long cateID, Pageable pageable);
 	
 	public Book saveBook(Book book);

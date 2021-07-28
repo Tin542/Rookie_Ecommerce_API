@@ -86,7 +86,13 @@ public class HomeController {
         ResponseDTO response = new ResponseDTO();
         try {
             List<Category> listCateEntity = cateService.getAllCategory();
-            List<CategoryDTO> listCateDTO = listCateEntity.stream().map(cateConvert::toDTO).collect(Collectors.toList());
+            List<CategoryDTO> listCateDTO = new ArrayList<>();
+            for ( Category cateEntity : listCateEntity) {
+                if(cateEntity.isDelete() == false){
+                    CategoryDTO cateDTO = cateConvert.toDTO(cateEntity);
+                    listCateDTO.add(cateDTO);
+                }
+            }
 
             response.setData(listCateDTO);
             response.setSuccessCode(SuccessCode.CATEGORY_GET_SUCCESS);
@@ -109,10 +115,14 @@ public class HomeController {
             //retrieve the List of items in the page.
             listBookEntity = pageBook.getContent();
 
-            List<BookDTO> listBookDTO = listBookEntity.stream()
-                    .map(bookConverter::toDTO)
-                    .collect(Collectors.toList());
+            List<BookDTO> listBookDTO = new ArrayList<>();
 
+            for ( Book bookEntity: listBookEntity ) {
+                if(bookEntity.isDelete()==false && bookEntity.getQuantity() > 0 && bookEntity.getCategory().isDelete() == false){
+                    BookDTO bookDTO = bookConverter.toDTO(bookEntity);
+                    listBookDTO.add(bookDTO);
+                }
+            }
             HashMap<String, Object> map = new HashMap<>();
             map.put("Books",listBookDTO);
             map.put("currentPage", pageBook.getNumber());//current Page.
@@ -142,8 +152,8 @@ public class HomeController {
     }
 
     //search book (by name or category id)
-    @GetMapping(value = "/search-book/{keyword}")
-    public ResponseEntity<ResponseDTO> searchBook(@PathVariable(name = "keyword")String keyword,
+    @GetMapping(value = "/search-book")
+    public ResponseEntity<ResponseDTO> searchBook(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "3") int size){//number item of page
         ResponseDTO response = new ResponseDTO();
@@ -155,7 +165,7 @@ public class HomeController {
             List<Book> listBookEntity = pageBook.getContent();
             List<BookDTO> listBookDTO = new ArrayList<>();
             for ( Book bookEntity: listBookEntity ) {
-                if(bookEntity.isDelete()==false && bookEntity.getQuantity() > 0){
+                if(bookEntity.isDelete()==false && bookEntity.getQuantity() > 0 && bookEntity.getCategory().isDelete() == false){
                     BookDTO bookDTO = bookConverter.toDTO(bookEntity);
                     listBookDTO.add(bookDTO);
                 }

@@ -7,6 +7,7 @@ public class SuccessCode {
 	public static final String CATEGORY_FIND_SUCCESS = "FIND_CATEGORY_SUCCESS";
 	public static final String CATEGORY_UPDATE_SUCCESS = "UPDATE_CATEGORY_SUCCESS";
 	public static final String CATEGORY_GET_SUCCESS = "GET_ALL_CATEGORY_SUCCESS";
+	public static final String CATEGORY_DELETE_SUCCESS = "DELETE_CATEGORY_SUCCESS";
 
 	//Book
 	public static final String BOOK_ADD_SUCCESS = "ADD_BOOK_SUCCESS";

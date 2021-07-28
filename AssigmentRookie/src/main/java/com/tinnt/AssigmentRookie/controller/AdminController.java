@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +57,41 @@ public class AdminController {
         this.rateConvert = rateConvert;
         this.rateService = rateService;
         this.accService = accService;
+    }
+
+
+    //Get Category
+    @GetMapping(value = "/category")
+    public ResponseEntity<ResponseDTO> getCategory(@RequestParam(defaultValue = "") String keyword,
+                                                   @RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "3") int size){
+        ResponseDTO response = new ResponseDTO();
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<Category> pageCate = cateService.searchCategory(keyword, paging);
+
+            //retrieve the List of items in the page.
+            List<Category> listCateEntity = pageCate.getContent();
+            List<CategoryDTO> listCateDTO = new ArrayList<>();
+            for ( Category cateEntity: listCateEntity ) {
+                CategoryDTO cateDTO = cateConvert.toDTO(cateEntity);
+                listCateDTO.add(cateDTO);
+
+            }
+
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("Categories",listCateDTO);
+            map.put("currentPage", pageCate.getNumber());//current Page.
+            map.put("totalItems", pageCate.getTotalElements());//total items stored in database.
+            map.put("totalPages", pageCate.getTotalPages());//number of total pages.
+
+            response.setData(map);
+            response.setSuccessCode(SuccessCode.BOOK_GET_SUCCESS);
+
+        }catch(Exception e){
+            throw new NotFoundException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
     }
 
     //Add Category
@@ -86,6 +122,28 @@ public class AdminController {
             throw new UpdateException(e.getMessage());
         }
         return ResponseEntity.ok().body(respone);
+    }
+
+    //Delete book
+    @PutMapping(value = "/delete-category/{id}")
+    public ResponseEntity<ResponseDTO> deleteCategory(@PathVariable(name = "id")long id){
+        ResponseDTO response = new ResponseDTO();
+        try {
+            Optional<Category> optional = cateService.getCategoryByID(id);
+            if(optional.isEmpty()){
+                response.setErrorCode(ErrorCode.CATEGORY_FIND_ERROR);
+            }else{
+                Category cateEntity = optional.get();
+                cateEntity.setDelete(true);
+                cateService.updateCategory(cateEntity, id);
+
+                response.setData(cateConvert.toDTO(cateEntity));
+                response.setSuccessCode(SuccessCode.CATEGORY_DELETE_SUCCESS);
+            }
+        }catch (Exception e){
+            throw new DeleteException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
     }
 
     //Add Book
@@ -151,8 +209,8 @@ public class AdminController {
     }
 
     //search book (by name or category id)
-    @GetMapping(value = "/search-book/{keyword}")
-    public ResponseEntity<ResponseDTO> searchBook(@PathVariable(name = "keyword")String keyword,
+    @GetMapping(value = "/search-book")
+    public ResponseEntity<ResponseDTO> searchBook(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "3") int size){//number item of page
         ResponseDTO response = new ResponseDTO();
@@ -162,9 +220,12 @@ public class AdminController {
 
             //retrieve the List of items in the page.
             List<Book> listBookEntity = pageBook.getContent();
-            List<BookDTO> listBookDTO = listBookEntity.stream()
-                    .map(bookConverter::toDTO)
-                    .collect(Collectors.toList());
+            List<BookDTO> listBookDTO = new ArrayList<>();
+            for ( Book bookEntity: listBookEntity ) {
+                    BookDTO bookDTO = bookConverter.toDTO(bookEntity);
+                    listBookDTO.add(bookDTO);
+
+            }
 
             HashMap<String, Object> map = new HashMap<>();
             map.put("Books",listBookDTO);
@@ -177,6 +238,36 @@ public class AdminController {
 
         }catch(Exception e){
             throw new NotFoundException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
+    }
+    //Get all book
+    @GetMapping(value = "/book")
+    public ResponseEntity<ResponseDTO> getAllBook(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "3") int size){
+        ResponseDTO response = new ResponseDTO();
+        try {
+            List<Book> listBookEntity = new ArrayList<>();
+            Pageable paging = PageRequest.of(page, size);
+            Page<Book> pageBook = bookService.getAllBook(paging);
+
+            //retrieve the List of items in the page.
+            listBookEntity = pageBook.getContent();
+
+            List<BookDTO> listBookDTO = listBookEntity.stream()
+                    .map(bookConverter::toDTO)
+                    .collect(Collectors.toList());
+
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("Books",listBookDTO);
+            map.put("currentPage", pageBook.getNumber());//current Page.
+            map.put("totalItems", pageBook.getTotalElements());//total items stored in database.
+            map.put("totalPages", pageBook.getTotalPages());//number of total pages.
+
+            response.setData(map);
+            response.setSuccessCode(SuccessCode.BOOK_GET_SUCCESS);
+        }catch (Exception e){
+            response.setErrorCode(e.getMessage());
         }
         return ResponseEntity.ok().body(response);
     }
@@ -210,7 +301,7 @@ public class AdminController {
     }
 
     //Edit rate
-    @PutMapping(value = "/all/{id}")
+    @PutMapping(value = "/update-rate/{id}")
     public ResponseEntity<ResponseDTO> editRating(@PathVariable(name = "id")Long id, @RequestBody RatingDTO rateDTO){
         ResponseDTO response = new ResponseDTO();
         try {
@@ -240,7 +331,7 @@ public class AdminController {
     }
 
     //delete rate
-    @DeleteMapping(value = "/all/{id}")
+    @DeleteMapping(value = "/delete-rate/{id}")
     public ResponseEntity<ResponseDTO> deleteRating(@PathVariable(name = "id")Long id){
         ResponseDTO response = new ResponseDTO();
         try {

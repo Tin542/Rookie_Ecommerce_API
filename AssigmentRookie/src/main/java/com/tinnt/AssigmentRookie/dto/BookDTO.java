@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -49,5 +50,8 @@ public class BookDTO {
 	private int quantity;
 
 	private float rate;
+
+	Date createDate;
+	Date updateDate;
 
 }
