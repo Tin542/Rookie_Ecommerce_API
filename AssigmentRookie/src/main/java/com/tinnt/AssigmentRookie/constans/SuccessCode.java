@@ -21,4 +21,10 @@ public class SuccessCode {
 	public static final String RATING_DELETE_SUCCESS = "DELETE_RATING_SUCCESS";
 	public static final String RATING_UPDATE_SUCCESS = "UPDATE_RATING_SUCCESS";
 	public static final String RATING_FIND_SUCCESS = "RATING_FIND_SUCCESS";
+
+	//Publisher
+	public static final String PUBLISHER_GET_SUCCESS = "PUBLISHER_GET_SUCCESS";
+	public static final String PUBLISHER_ADD_SUCCESS = "PUBLISHER_ADD_SUCCESS";
+	public static final String PUBLISHER_UPDATE_SUCCESS = "PUBLISHER_UPDATE_SUCCESS";
+	public static final String PUBLISHER_DELETE_SUCCESS = "PUBLISHER_DELETE_SUCCESS";
 }

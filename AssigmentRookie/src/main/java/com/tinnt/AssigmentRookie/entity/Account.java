@@ -1,14 +1,16 @@
 package com.tinnt.AssigmentRookie.entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,21 +40,27 @@ public class Account implements Serializable {
 	@Column(name = "account_id")
 	private long accountID;
 
+	@NotBlank
 	@Column(name = "username")
 	private String username;
 
+	@NotBlank
 	@Column(name = "email")
 	private String email;
 
+	@NotBlank
 	@Column(name = "password")
 	private String password;
 
+	@NotBlank
 	@Column(name = "full_name")
 	private String fullname;
 
+	@NotBlank
 	@Column(name = "address")
 	private String address;
 
+	@NotNull
 	@Column(name = "phone")
 	private String phone;
 

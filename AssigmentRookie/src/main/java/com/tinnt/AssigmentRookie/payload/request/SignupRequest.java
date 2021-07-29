@@ -27,7 +27,6 @@ public class SignupRequest {
 	private String address;
 
 	@Pattern(regexp = "(^$|[0-9]{10})", message = "phone is invalid !")
-	@Size(min = 1, max = 20, message = "Address required 6-20 chars !")
 	private String phone;
 
 	private Set<String> role;

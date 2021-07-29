@@ -4,17 +4,17 @@ import com.tinnt.AssigmentRookie.constans.ErrorCode;
 import com.tinnt.AssigmentRookie.constans.SuccessCode;
 import com.tinnt.AssigmentRookie.converter.BookConverter;
 import com.tinnt.AssigmentRookie.converter.CategoryConverter;
+import com.tinnt.AssigmentRookie.converter.PublisherConverter;
 import com.tinnt.AssigmentRookie.converter.RatingConverter;
-import com.tinnt.AssigmentRookie.dto.BookDTO;
-import com.tinnt.AssigmentRookie.dto.CategoryDTO;
-import com.tinnt.AssigmentRookie.dto.RatingDTO;
-import com.tinnt.AssigmentRookie.dto.ResponseDTO;
+import com.tinnt.AssigmentRookie.dto.*;
 import com.tinnt.AssigmentRookie.entity.Book;
 import com.tinnt.AssigmentRookie.entity.Category;
+import com.tinnt.AssigmentRookie.entity.Publisher;
 import com.tinnt.AssigmentRookie.entity.Rating;
 import com.tinnt.AssigmentRookie.exception.NotFoundException;
 import com.tinnt.AssigmentRookie.service.BookService;
 import com.tinnt.AssigmentRookie.service.CategoryService;
+import com.tinnt.AssigmentRookie.service.PublisherService;
 import com.tinnt.AssigmentRookie.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,15 +39,19 @@ public class HomeController {
     private BookConverter bookConverter;
     private RatingConverter rateConvert;
     private RatingService rateService;
+    private PublisherConverter publisherConverter;
+    private PublisherService publisherService;
 
     @Autowired
-    public HomeController(CategoryService cateService, CategoryConverter cateConvert, BookService bookService, BookConverter bookConverter, RatingConverter rateConvert, RatingService rateService) {
+    public HomeController(CategoryService cateService, CategoryConverter cateConvert, BookService bookService, BookConverter bookConverter, RatingConverter rateConvert, RatingService rateService, PublisherConverter publisherConverter, PublisherService publisherService) {
         this.cateService = cateService;
         this.cateConvert = cateConvert;
         this.bookService = bookService;
         this.bookConverter = bookConverter;
         this.rateConvert = rateConvert;
         this.rateService = rateService;
+        this.publisherConverter = publisherConverter;
+        this.publisherService = publisherService;
     }
 
     //Get category by name
@@ -186,6 +190,7 @@ public class HomeController {
         return ResponseEntity.ok().body(response);
     }
 
+    //get all rating by book id
     @GetMapping(value = "/{bookID}")
     public ResponseEntity<ResponseDTO> getRatingByBookID(@PathVariable(name = "bookID")Long id){
         ResponseDTO response = new ResponseDTO();
@@ -201,6 +206,43 @@ public class HomeController {
                 response.setData(listRatingDTO);
                 response.setSuccessCode(SuccessCode.RATING_FIND_SUCCESS);
             }
+
+        }catch (Exception e){
+            throw new NotFoundException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    //get all publisher
+    @GetMapping(value = "/publisher")
+    public ResponseEntity<ResponseDTO> getALlPublisher(){
+        ResponseDTO response = new ResponseDTO();
+        try {
+            List<Publisher> listPublisherEntity = publisherService.getAllPublisher();
+            List<PublisherDTO> listPublisherDTO = new ArrayList<>();
+            for ( Publisher publisherEntity : listPublisherEntity) {
+                if(publisherEntity.isDelete() == false){
+                    PublisherDTO publisherDTO = publisherConverter.toDTO(publisherEntity);
+                    listPublisherDTO.add(publisherDTO);
+                }
+            }
+
+            response.setData(listPublisherDTO);
+            response.setSuccessCode(SuccessCode.PUBLISHER_GET_SUCCESS);
+        }catch(Exception e){
+            throw new NotFoundException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    //get publisher by id
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ResponseDTO> getPublisherByID(@PathVariable(name = "id")Long id){
+        ResponseDTO response = new ResponseDTO();
+        try {
+            Publisher publisherEntity = publisherService.getPublisherByID(id).get();
+            response.setData(publisherConverter.toDTO(publisherEntity));
+            response.setSuccessCode(SuccessCode.PUBLISHER_GET_SUCCESS);
 
         }catch (Exception e){
             throw new NotFoundException(e.getMessage());

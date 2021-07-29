@@ -13,18 +13,14 @@ import java.sql.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDTO {
+public class AuthorDTO {
+    private long authorID;
 
-	private long categoryID;
+    @NotBlank
+    private String authorName;
 
-	@NotBlank
-	@Length(min = 2, max = 50, message = "Category name required 2-50 chars !")
-	private String categoryName;
+    private Date createDate;
+    private Date updateDate;
 
-	private Date createDate;
-	private Date updateDate;
-
-	private boolean isDelete;
-
-	
+    private boolean isDelete;
 }

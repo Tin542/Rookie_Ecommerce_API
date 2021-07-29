@@ -1,9 +1,12 @@
 package com.tinnt.AssigmentRookie.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -46,11 +49,11 @@ public class Book implements Serializable {
 	@Column(name = "isDelete")
 	private boolean isDelete;
 	
-	@Column(name = "author")
-	private String author;
-	
-	@Column(name = "publisher")
-	private String publisher;
+//	@Column(name = "author")
+//	private String author;
+
+//	@Column(name = "publisher")
+//	private String publisher;
 	
 	@Column(name = "publish_year")
 	private int publish_year;
@@ -75,8 +78,18 @@ public class Book implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "categoryId")
 	private Category category;
-	
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "publisherId")
+	private Publisher publisher;
+
 	@OneToMany(mappedBy = "book")
 	private List<Rating> listRate = new ArrayList<>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "book_author",
+			joinColumns = @JoinColumn(name = "book_id"),
+			inverseJoinColumns = @JoinColumn(name = "author_id"))
+	private Set<Author> author = new HashSet<>();
 
 }
