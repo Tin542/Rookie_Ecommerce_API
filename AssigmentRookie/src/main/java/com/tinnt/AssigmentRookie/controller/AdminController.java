@@ -2,10 +2,7 @@ package com.tinnt.AssigmentRookie.controller;
 
 import com.tinnt.AssigmentRookie.constans.ErrorCode;
 import com.tinnt.AssigmentRookie.constans.SuccessCode;
-import com.tinnt.AssigmentRookie.converter.BookConverter;
-import com.tinnt.AssigmentRookie.converter.CategoryConverter;
-import com.tinnt.AssigmentRookie.converter.PublisherConverter;
-import com.tinnt.AssigmentRookie.converter.RatingConverter;
+import com.tinnt.AssigmentRookie.converter.*;
 import com.tinnt.AssigmentRookie.dto.*;
 import com.tinnt.AssigmentRookie.entity.*;
 import com.tinnt.AssigmentRookie.exception.AddException;
@@ -41,9 +38,11 @@ public class AdminController {
     private AccountService accService;
     private PublisherService publisherService;
     private PublisherConverter publisherConverter;
+    private AuthorService authorService;
+    private AuthorConverter authorConverter;
 
     @Autowired
-    public AdminController(CategoryService cateService, CategoryConverter cateConvert, BookService bookService, BookConverter bookConverter, RatingConverter rateConvert, RatingService rateService, AccountService accService, PublisherService publisherService, PublisherConverter publisherConverter) {
+    public AdminController(CategoryService cateService, CategoryConverter cateConvert, BookService bookService, BookConverter bookConverter, RatingConverter rateConvert, RatingService rateService, AccountService accService, PublisherService publisherService, PublisherConverter publisherConverter, AuthorService authorService, AuthorConverter authorConverter) {
         this.cateService = cateService;
         this.cateConvert = cateConvert;
         this.bookService = bookService;
@@ -53,6 +52,8 @@ public class AdminController {
         this.accService = accService;
         this.publisherService = publisherService;
         this.publisherConverter = publisherConverter;
+        this.authorService = authorService;
+        this.authorConverter = authorConverter;
     }
 
     //Get Category
@@ -392,7 +393,8 @@ public class AdminController {
 
     //Update publisher
     @PutMapping(value = "/update-publisher/{id}")
-    public ResponseEntity<ResponseDTO> updatePublisher(@Valid @RequestBody PublisherDTO publisherDTO, @PathVariable(name = "id")Long id) {
+    public ResponseEntity<ResponseDTO> updatePublisher(@Valid @RequestBody PublisherDTO publisherDTO,
+                                                       @PathVariable(name = "id")Long id) {
         ResponseDTO respone = new ResponseDTO();
         try {
             Publisher publisherEntity = publisherService.updatePublisher(publisherConverter.toEntity(publisherDTO), id);
@@ -406,7 +408,6 @@ public class AdminController {
     }
 
     //Delete publisher
-    //Delete book
     @PutMapping(value = "/delete-publisher/{id}")
     public ResponseEntity<ResponseDTO> deletePublisher(@PathVariable(name = "id")long id){
         ResponseDTO response = new ResponseDTO();
@@ -421,6 +422,89 @@ public class AdminController {
 
                 response.setData(publisherConverter.toDTO(publisherEntity));
                 response.setSuccessCode(SuccessCode.PUBLISHER_DELETE_SUCCESS);
+            }
+        }catch (Exception e){
+            throw new DeleteException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    //get all author
+    @GetMapping(value = "/author")
+    public ResponseEntity<ResponseDTO> getALlAuthor(@RequestParam(defaultValue = "") String keyword,
+                                                       @RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "3") int size){
+        ResponseDTO response = new ResponseDTO();
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<Author> pageAuthor = authorService.searchAuthor(keyword, paging);
+
+            //retrieve the List of items in the page.
+            List<Author> listAuthorEntity = pageAuthor.getContent();
+            List<AuthorDTO> listAuthorDTO = listAuthorEntity.stream()
+                    .map(authorConverter::toDTO)
+                    .collect(Collectors.toList());
+
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("authors",listAuthorDTO);
+            map.put("currentPage", pageAuthor.getNumber());//current Page.
+            map.put("totalItems", pageAuthor.getTotalElements());//total items stored in database.
+            map.put("totalPages", pageAuthor.getTotalPages());//number of total pages.
+
+            response.setData(map);
+            response.setSuccessCode(SuccessCode.AUTHOR_GET_SUCCESS);
+        }catch(Exception e){
+            throw new NotFoundException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
+    //add author
+    @PostMapping(value = "/add-author")
+    public ResponseEntity<ResponseDTO> addPublisher(@Valid @RequestBody AuthorDTO authorDTO){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Author authorEntity = authorConverter.toEntity(authorDTO);
+            authorEntity =authorService.addAuthor(authorEntity);
+            responseDTO.setData(authorConverter.toDTO(authorEntity));
+            responseDTO.setSuccessCode(SuccessCode.AUTHOR_ADD_SUCCESS);
+        } catch (Exception e) {
+            throw new AddException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    //Update publisher
+    @PutMapping(value = "/update-author/{id}")
+    public ResponseEntity<ResponseDTO> updateAuthor(@Valid @RequestBody AuthorDTO authorDTO,
+                                                       @PathVariable(name = "id")Long id) {
+        ResponseDTO respone = new ResponseDTO();
+        try {
+            Author authorEntity = authorService.updateAuthor(authorConverter.toEntity(authorDTO), id);
+            respone.setData(authorConverter.toDTO(authorEntity));
+            respone.setSuccessCode(SuccessCode.AUTHOR_UPDATE_SUCCESS);
+
+        } catch (Exception e) {
+            throw new UpdateException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(respone);
+    }
+
+    //Delete publisher
+    @PutMapping(value = "/delete-author/{id}")
+    public ResponseEntity<ResponseDTO> deleteAuthor(@PathVariable(name = "id")long id){
+        ResponseDTO response = new ResponseDTO();
+        try {
+            Optional<Author> optional = authorService.getAuthorByID(id);
+            if(optional.isEmpty()){
+                response.setErrorCode(ErrorCode.AUTHOR_NOT_FOUND);
+            }else{
+                Author authorEntity = optional.get();
+                authorEntity.setDelete(true);
+                authorService.updateAuthor(authorEntity, id);
+
+                response.setData(authorConverter.toDTO(authorEntity));
+                response.setSuccessCode(SuccessCode.AUTHOR_DELETE_SUCCESS);
             }
         }catch (Exception e){
             throw new DeleteException(e.getMessage());

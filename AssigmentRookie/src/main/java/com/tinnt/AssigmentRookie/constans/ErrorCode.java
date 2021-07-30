@@ -18,6 +18,7 @@ public class ErrorCode {
 
 	//Publisher
 	public static final String PUBLISHER_NOT_FOUND = "PUBLISHER_NOT_FOUND !";
-	public static final String PUBLISHER_ADD_ERROR = "PUBLISHER_ADD_FAIL !";
 
+	//Publisher
+	public static final String AUTHOR_NOT_FOUND = "AUTHOR_NOT_FOUND !";
 }

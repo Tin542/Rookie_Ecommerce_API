@@ -2,20 +2,11 @@ package com.tinnt.AssigmentRookie.controller;
 
 import com.tinnt.AssigmentRookie.constans.ErrorCode;
 import com.tinnt.AssigmentRookie.constans.SuccessCode;
-import com.tinnt.AssigmentRookie.converter.BookConverter;
-import com.tinnt.AssigmentRookie.converter.CategoryConverter;
-import com.tinnt.AssigmentRookie.converter.PublisherConverter;
-import com.tinnt.AssigmentRookie.converter.RatingConverter;
+import com.tinnt.AssigmentRookie.converter.*;
 import com.tinnt.AssigmentRookie.dto.*;
-import com.tinnt.AssigmentRookie.entity.Book;
-import com.tinnt.AssigmentRookie.entity.Category;
-import com.tinnt.AssigmentRookie.entity.Publisher;
-import com.tinnt.AssigmentRookie.entity.Rating;
+import com.tinnt.AssigmentRookie.entity.*;
 import com.tinnt.AssigmentRookie.exception.NotFoundException;
-import com.tinnt.AssigmentRookie.service.BookService;
-import com.tinnt.AssigmentRookie.service.CategoryService;
-import com.tinnt.AssigmentRookie.service.PublisherService;
-import com.tinnt.AssigmentRookie.service.RatingService;
+import com.tinnt.AssigmentRookie.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,9 +32,11 @@ public class HomeController {
     private RatingService rateService;
     private PublisherConverter publisherConverter;
     private PublisherService publisherService;
+    private AuthorService authorService;
+    private AuthorConverter authorConverter;
 
     @Autowired
-    public HomeController(CategoryService cateService, CategoryConverter cateConvert, BookService bookService, BookConverter bookConverter, RatingConverter rateConvert, RatingService rateService, PublisherConverter publisherConverter, PublisherService publisherService) {
+    public HomeController(CategoryService cateService, CategoryConverter cateConvert, BookService bookService, BookConverter bookConverter, RatingConverter rateConvert, RatingService rateService, PublisherConverter publisherConverter, PublisherService publisherService, AuthorService authorService, AuthorConverter authorConverter) {
         this.cateService = cateService;
         this.cateConvert = cateConvert;
         this.bookService = bookService;
@@ -52,6 +45,8 @@ public class HomeController {
         this.rateService = rateService;
         this.publisherConverter = publisherConverter;
         this.publisherService = publisherService;
+        this.authorService = authorService;
+        this.authorConverter = authorConverter;
     }
 
     //Get category by name
@@ -236,7 +231,7 @@ public class HomeController {
     }
 
     //get publisher by id
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "publisher/{id}")
     public ResponseEntity<ResponseDTO> getPublisherByID(@PathVariable(name = "id")Long id){
         ResponseDTO response = new ResponseDTO();
         try {
@@ -249,5 +244,42 @@ public class HomeController {
         }
         return ResponseEntity.ok().body(response);
     }
+
+    //get all author
+    @GetMapping(value = "/author")
+    public ResponseEntity<ResponseDTO> getALlAuthor(){
+        ResponseDTO response = new ResponseDTO();
+        try {
+            List<Author> listAuthorEntity = authorService.getAllAuthor();
+            List<AuthorDTO> listAuthorDTO = new ArrayList<>();
+            for ( Author authorEntity : listAuthorEntity) {
+                if(authorEntity.isDelete() == false){
+                    AuthorDTO authorDTO = authorConverter.toDTO(authorEntity);
+                    listAuthorDTO.add(authorDTO);
+                }
+            }
+
+            response.setData(listAuthorDTO);
+            response.setSuccessCode(SuccessCode.AUTHOR_GET_SUCCESS);
+        }catch(Exception e){
+            throw new NotFoundException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
+    }
+    //get author by id
+    @GetMapping(value = "author/{id}")
+    public ResponseEntity<ResponseDTO> getAuthorByID(@PathVariable(name = "id")Long id){
+        ResponseDTO response = new ResponseDTO();
+        try {
+            Author authorEntity = authorService.getAuthorByID(id).get();
+            response.setData(authorConverter.toDTO(authorEntity));
+            response.setSuccessCode(SuccessCode.AUTHOR_GET_SUCCESS);
+
+        }catch (Exception e){
+            throw new NotFoundException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
+    }
+
 
 }

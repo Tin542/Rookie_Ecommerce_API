@@ -27,4 +27,10 @@ public class SuccessCode {
 	public static final String PUBLISHER_ADD_SUCCESS = "PUBLISHER_ADD_SUCCESS";
 	public static final String PUBLISHER_UPDATE_SUCCESS = "PUBLISHER_UPDATE_SUCCESS";
 	public static final String PUBLISHER_DELETE_SUCCESS = "PUBLISHER_DELETE_SUCCESS";
+
+	//author
+	public static final String AUTHOR_GET_SUCCESS = "AUTHOR_GET_SUCCESS";
+	public static final String AUTHOR_ADD_SUCCESS = "AUTHOR_ADD_SUCCESS";
+	public static final String AUTHOR_UPDATE_SUCCESS = "AUTHOR_UPDATE_SUCCESS";
+	public static final String AUTHOR_DELETE_SUCCESS = "AUTHOR_DELETE_SUCCESS";
 }
