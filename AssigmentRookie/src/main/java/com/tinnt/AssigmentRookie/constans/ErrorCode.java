@@ -7,8 +7,8 @@ public class ErrorCode {
 	public static final String CATEGORY_EXISTED = "CATEGORY_ALREADY_EXISTED !";
 
 	//Book
-	public static final String BOOK_ADD_ERROR = "ADD_BOOK_FAIL !";
 	public static final String BOOK_FIND_ERROR = "BOOK_NOT_FOUND !";
+	public static final String BOOK_EXISTED = "BOOK_ALREADY_EXISTED !";
 
 	//Rating
 	public static final String RATING_FIND_ERROR = "RATING_NOT_FOUND !";

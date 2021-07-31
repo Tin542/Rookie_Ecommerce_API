@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,18 +33,14 @@ public class BookDTO {
 
 	private boolean isDelete;
 
-	@NotBlank
-	@Length(min = 2, max = 100, message = "author required 2-100 chars !")
-	private String author;
+	private Set<String> authorName;
 
-	@NotBlank
-	@Length(min = 2, max = 50, message = "publisher required 2-50 chars !")
-	private String publisher;
+	private String publisherName;
 
-	@NotNull(message = "Please enter publish year !")
+	@NotNull
 	private int publish_year;
 
-	@NotBlank(message = "Should be input link image !!!")
+	@NotBlank
 	private String image;
 
 	@NotNull

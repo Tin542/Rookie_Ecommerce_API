@@ -9,6 +9,7 @@ import com.tinnt.AssigmentRookie.exception.AddException;
 import com.tinnt.AssigmentRookie.exception.DeleteException;
 import com.tinnt.AssigmentRookie.exception.NotFoundException;
 import com.tinnt.AssigmentRookie.exception.UpdateException;
+import com.tinnt.AssigmentRookie.repository.AuthorRepository;
 import com.tinnt.AssigmentRookie.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -40,9 +38,10 @@ public class AdminController {
     private PublisherConverter publisherConverter;
     private AuthorService authorService;
     private AuthorConverter authorConverter;
+    private AuthorRepository authorRepository;
 
     @Autowired
-    public AdminController(CategoryService cateService, CategoryConverter cateConvert, BookService bookService, BookConverter bookConverter, RatingConverter rateConvert, RatingService rateService, AccountService accService, PublisherService publisherService, PublisherConverter publisherConverter, AuthorService authorService, AuthorConverter authorConverter) {
+    public AdminController(CategoryService cateService, CategoryConverter cateConvert, BookService bookService, BookConverter bookConverter, RatingConverter rateConvert, RatingService rateService, AccountService accService, PublisherService publisherService, PublisherConverter publisherConverter, AuthorService authorService, AuthorConverter authorConverter, AuthorRepository authorRepository) {
         this.cateService = cateService;
         this.cateConvert = cateConvert;
         this.bookService = bookService;
@@ -54,6 +53,7 @@ public class AdminController {
         this.publisherConverter = publisherConverter;
         this.authorService = authorService;
         this.authorConverter = authorConverter;
+        this.authorRepository = authorRepository;
     }
 
     //Get Category
@@ -147,20 +147,24 @@ public class AdminController {
     public ResponseEntity<ResponseDTO> addBook(@Valid @RequestBody BookDTO bookDTO){
         ResponseDTO response = new ResponseDTO();
         try {
-            Optional<Category> optional = cateService.getCategoryByName(bookDTO.getCategoryName());
-            if(optional.isEmpty()){
-                response.setErrorCode(ErrorCode.CATEGORY_FIND_ERROR);
-            }else{
-                Category cateEntity = optional.get();
-                Book bookEntity = bookConverter.toEntity(bookDTO);
-                bookEntity.setCategory(cateEntity);
-                bookEntity = bookService.saveBook(bookEntity);
-                response.setData(bookConverter.toDTO(bookEntity));
-                response.setSuccessCode(SuccessCode.BOOK_ADD_SUCCESS);
+            Set<String> strAuthor = bookDTO.getAuthorName();
+            Set<Author> author = new HashSet<>();
+            for (String authorName : strAuthor) {
+                Author authorEntity = authorRepository.findByName(authorName)
+                        .orElseThrow(() -> new NotFoundException("Cannot found author: "+authorName));
+                author.add(authorEntity);
             }
 
+            Book bookEntity = bookConverter.toEntity(bookDTO);
+            bookEntity.setAuthor(author);
+            bookEntity = bookService.saveBook(bookEntity);
+
+            BookDTO bookDTO1 = bookConverter.toDTO(bookEntity);
+            bookDTO1.setAuthorName(strAuthor);
+            response.setData(bookDTO1);
+            response.setSuccessCode(SuccessCode.BOOK_ADD_SUCCESS);
+
         }catch(Exception e){
-            response.setErrorCode(ErrorCode.BOOK_ADD_ERROR);
             throw new AddException(e.getMessage());
 
         }
@@ -172,9 +176,21 @@ public class AdminController {
     public ResponseEntity<ResponseDTO> updateBook(@Valid @RequestBody BookDTO bookDTO, @PathVariable(name = "id") long id){
         ResponseDTO response = new ResponseDTO();
         try {
+            Set<String> strAuthor = bookDTO.getAuthorName();
+            Set<Author> author = new HashSet<>();
+            for (String authorName : strAuthor) {
+                Author authorEntity = authorRepository.findByName(authorName)
+                        .orElseThrow(() -> new NotFoundException("Cannot found author: "+authorName));
+                author.add(authorEntity);
+            }
+
             Book bookEntity = bookConverter.toEntity(bookDTO);
+            bookEntity.setAuthor(author);
+
             bookEntity = bookService.updateBook(bookEntity, id);
-            response.setData(bookConverter.toDTO(bookEntity));
+            BookDTO bookDTO1 = bookConverter.toDTO(bookEntity);
+            bookDTO1.setAuthorName(strAuthor);
+            response.setData(bookDTO1);
             response.setSuccessCode(SuccessCode.BOOK_UPDATE_SUCCESS);
         }catch(Exception e){
             throw new UpdateException(e.getMessage());

@@ -13,8 +13,8 @@ public interface BookService {
 	public Page<Book> getAllBook(Pageable pageable);
 	
 	public Optional<Book> getBookByID(long id);
-	
-	public Page<Book> getBookByName(String name, Pageable pageable);
+
+	public Optional<Book> getBookByName(String name);
 
 	public Page<Book> getBookByCategory(long cateID, Pageable pageable);
 	

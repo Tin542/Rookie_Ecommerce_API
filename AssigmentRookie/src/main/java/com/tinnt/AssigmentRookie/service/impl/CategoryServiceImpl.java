@@ -85,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
 		Optional<Category> optional = cateRepository.findByName(name);
 		if(optional.isEmpty()){
 			LOGGER.info("Not exist category with name: "+name);
-			throw new NotFoundException(ErrorCode.CATEGORY_FIND_ERROR);
+			throw new NotFoundException("Not exist category with name: "+name);
 		}
 		return cateRepository.findByName(name);
 	}

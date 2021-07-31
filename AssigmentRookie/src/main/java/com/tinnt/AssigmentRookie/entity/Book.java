@@ -49,12 +49,6 @@ public class Book implements Serializable {
 	@Column(name = "isDelete")
 	private boolean isDelete;
 	
-//	@Column(name = "author")
-//	private String author;
-
-//	@Column(name = "publisher")
-//	private String publisher;
-	
 	@Column(name = "publish_year")
 	private int publish_year;
 	
