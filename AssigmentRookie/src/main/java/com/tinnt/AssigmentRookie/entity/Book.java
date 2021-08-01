@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,18 +39,22 @@ public class Book implements Serializable {
 	@Column(name = "bookId")
 	private long bookID;
 
+	@NotBlank
 	@Column(name = "bookName")
 	private String book_name;
 
+	@NotBlank
 	@Column(name = "description")
 	private String description;
-	
+
+	@NotNull
 	@Column(name = "price")
 	private float price;
 	
 	@Column(name = "isDelete")
 	private boolean isDelete;
-	
+
+	@NotNull
 	@Column(name = "publish_year")
 	private int publish_year;
 	
@@ -59,10 +65,12 @@ public class Book implements Serializable {
 	@Column(name = "update_date")
 	@LastModifiedDate
 	private Date update_date;
-	
+
+	@NotBlank
 	@Column(name = "images")
 	private String image;
-	
+
+	@NotNull
 	@Column(name = "quantity")
 	private int quantity;
 

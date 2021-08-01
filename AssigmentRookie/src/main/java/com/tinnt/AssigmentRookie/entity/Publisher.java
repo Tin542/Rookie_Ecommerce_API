@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class Publisher implements Serializable {
     @Column(name = "id")
     private long id;
 
+    @NotBlank
     @Column(name = "publisherName")
     private String name;
 

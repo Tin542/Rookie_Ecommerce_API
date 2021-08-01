@@ -21,4 +21,6 @@ public interface CategoryService {
 	public Category updateCategory(Category category, long id);
 
 	public Page<Category> searchCategory(String name, Pageable pageable);
+
+	public int deleteCategory(long id);
 }

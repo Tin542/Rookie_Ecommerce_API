@@ -90,4 +90,10 @@ public class AuhtorServiceImpl implements AuthorService {
         }
         return authorRepository.searchAuthor(name, pageable);
     }
+
+    @Override
+    public int deleteAuthor(long id) {
+        getAuthorByID(id);
+        return authorRepository.deleteAuthor(id);
+    }
 }

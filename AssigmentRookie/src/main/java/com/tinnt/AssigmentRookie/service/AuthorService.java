@@ -19,4 +19,6 @@ public interface AuthorService {
     public Author updateAuthor(Author author, long id);
 
     public Page<Author> searchAuthor(String name, Pageable pageable);
+
+    public int deleteAuthor(long id);
 }

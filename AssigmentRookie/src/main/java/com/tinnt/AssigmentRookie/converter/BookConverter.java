@@ -1,5 +1,6 @@
 package com.tinnt.AssigmentRookie.converter;
 
+import com.tinnt.AssigmentRookie.dto.HomeDTO;
 import com.tinnt.AssigmentRookie.entity.Author;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,13 @@ public class BookConverter {
 		this.mapper = mapper;
 	}
 
-	//convert to Entity
+	//convert to Entity (for admin)
 	public Book toEntity(BookDTO bookDTO) {
 		Book bookEntity = mapper.map(bookDTO, Book.class);
 		return bookEntity;
 	}
 	
-	//convert to DTO
+	//convert to DTO (for admin)
 	public BookDTO toDTO(Book bookEntity) {
 		BookDTO bookDTO = mapper.map(bookEntity, BookDTO.class);
 		Set<Author> author = bookEntity.getAuthor();
@@ -37,5 +38,17 @@ public class BookConverter {
 		}
 		bookDTO.setAuthorName(name);
 		return bookDTO;
+	}
+
+	//convert to Entity (for home)
+	public Book toEntityForHome(HomeDTO bookDTO) {
+		Book bookEntity = mapper.map(bookDTO, Book.class);
+		return bookEntity;
+	}
+
+	//convert to DTO (for home)
+	public HomeDTO toDTOForHome(Book bookEntity) {
+		HomeDTO home = mapper.map(bookEntity, HomeDTO.class);
+		return home;
 	}
 }

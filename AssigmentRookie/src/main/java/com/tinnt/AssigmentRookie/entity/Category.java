@@ -33,7 +33,8 @@ public class Category implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "categoryId")
 	private long categoryID;
-	
+
+	@NotBlank
 	@Column(name = "categoryName")
 	@NotBlank
 	@Length(min = 2, max = 50, message = "Category name required 2-50 chars !")

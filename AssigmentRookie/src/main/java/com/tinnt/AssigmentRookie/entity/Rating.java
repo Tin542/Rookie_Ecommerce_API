@@ -10,6 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -26,9 +28,11 @@ public class Rating {
     @Column(name = "ratingId")
     private long rateID;
 
+    @NotNull
     @Column(name = "rate")
     private float rate;
 
+    @NotBlank
     @Column(name = "feedback")
     private String feedback;
 

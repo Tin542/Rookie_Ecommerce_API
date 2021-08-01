@@ -44,11 +44,8 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public Category updateCategory(Category category, long id)throws UpdateException {
-		Optional<Category> optional = cateRepository.findById(id);
-		if(optional.isEmpty()){
-			LOGGER.info("Not exist Category with id: "+id);
-			throw new UpdateException(ErrorCode.CATEGORY_FIND_ERROR);
-		}
+		Optional<Category> optional = getCategoryByID(id);
+
 		Category cateEntity = optional.get();
 		cateEntity.setCreate_date(cateEntity.getCreate_date());
 		cateEntity.setCategoryName(category.getCategoryName());
@@ -68,6 +65,12 @@ public class CategoryServiceImpl implements CategoryService {
 			return cateRepository.getAllCategory(pageable);
 		}
 		return cateRepository.searchCategory(name, pageable);
+	}
+
+	@Override
+	public int deleteCategory(long id) {
+		getCategoryByID(id);
+		return cateRepository.deleteCategory(id);
 	}
 
 	@Override

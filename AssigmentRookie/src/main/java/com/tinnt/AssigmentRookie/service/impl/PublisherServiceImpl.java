@@ -89,4 +89,10 @@ public class PublisherServiceImpl implements PublisherService {
         }
         return publisherRepository.searchPublisher(name, pageable);
     }
+
+    @Override
+    public int deletePublisher(long id) {
+        getPublisherByID(id);
+        return publisherRepository.deletePublisher(id);
+    }
 }

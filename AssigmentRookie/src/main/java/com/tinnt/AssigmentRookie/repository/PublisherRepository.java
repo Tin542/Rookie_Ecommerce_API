@@ -4,8 +4,10 @@ import com.tinnt.AssigmentRookie.entity.Publisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,4 +21,9 @@ public interface PublisherRepository extends JpaRepository<Publisher, Long> {
 
     @Query(value = "select * from publisher ", nativeQuery = true)
     Page<Publisher> getAllPublisher(Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update publisher set is_delete = true where id = ?1", nativeQuery = true)
+    int deletePublisher (long id);
 }

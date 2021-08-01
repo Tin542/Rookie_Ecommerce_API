@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,10 +31,12 @@ public class Order implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "orderId")
 	private long orderID;
-	
+
+	@NotBlank
 	@Column(name = "address")
 	private String address;
-	
+
+	@NotNull
 	@Column(name = "phone")
 	private String phone;
 	

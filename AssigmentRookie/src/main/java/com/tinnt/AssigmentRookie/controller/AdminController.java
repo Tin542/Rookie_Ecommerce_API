@@ -125,16 +125,10 @@ public class AdminController {
     public ResponseEntity<ResponseDTO> deleteCategory(@PathVariable(name = "id")long id){
         ResponseDTO response = new ResponseDTO();
         try {
-            Optional<Category> optional = cateService.getCategoryByID(id);
-            if(optional.isEmpty()){
-                response.setErrorCode(ErrorCode.CATEGORY_FIND_ERROR);
-            }else{
-                Category cateEntity = optional.get();
-                cateEntity.setDelete(true);
-                cateService.updateCategory(cateEntity, id);
-
-                response.setData(cateConvert.toDTO(cateEntity));
+            if(cateService.deleteCategory(id) > 0){
                 response.setSuccessCode(SuccessCode.CATEGORY_DELETE_SUCCESS);
+            }else{
+                response.setErrorCode((ErrorCode.CATEGORY_DELETE_ERROR));
             }
         }catch (Exception e){
             throw new DeleteException(e.getMessage());
@@ -203,16 +197,10 @@ public class AdminController {
     public ResponseEntity<ResponseDTO> deleteBook(@PathVariable(name = "id")long id){
         ResponseDTO response = new ResponseDTO();
         try {
-            Optional<Book> optional = bookService.getBookByID(id);
-            if(optional.isEmpty()){
-                response.setErrorCode(ErrorCode.BOOK_FIND_ERROR);
-            }else{
-                Book bookEntity = optional.get();
-                bookEntity.setDelete(true);
-                bookService.saveBook(bookEntity);
-
-                response.setData(bookConverter.toDTO(bookEntity));
+            if(bookService.deleteBook(id) >0){
                 response.setSuccessCode(SuccessCode.BOOK_DELETE_SUCCESS);
+            }else{
+                response.setErrorCode(ErrorCode.BOOK_DELETE_ERROR);
             }
         }catch (Exception e){
             throw new DeleteException(e.getMessage());
@@ -220,7 +208,7 @@ public class AdminController {
         return ResponseEntity.ok().body(response);
     }
 
-    //search book (by name or category id)
+    //search book (by name )
     @GetMapping(value = "/search-book")
     public ResponseEntity<ResponseDTO> searchBook(@RequestParam String keyword,
                                                   @RequestParam(defaultValue = "0") int page,
@@ -236,6 +224,39 @@ public class AdminController {
             for ( Book bookEntity: listBookEntity ) {
                     BookDTO bookDTO = bookConverter.toDTO(bookEntity);
                     listBookDTO.add(bookDTO);
+
+            }
+
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("Books",listBookDTO);
+            map.put("currentPage", pageBook.getNumber());//current Page.
+            map.put("totalItems", pageBook.getTotalElements());//total items stored in database.
+            map.put("totalPages", pageBook.getTotalPages());//number of total pages.
+
+            response.setData(map);
+            response.setSuccessCode(SuccessCode.BOOK_GET_SUCCESS);
+
+        }catch(Exception e){
+            throw new NotFoundException(e.getMessage());
+        }
+        return ResponseEntity.ok().body(response);
+    }
+    //search book (by name )
+    @GetMapping(value = "/search-book-by-cate")
+    public ResponseEntity<ResponseDTO> searchBookByCate(@RequestParam long id,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "3") int size){//number item of page
+        ResponseDTO response = new ResponseDTO();
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            Page<Book> pageBook = bookService.getBookByCategory(id,paging);
+
+            //retrieve the List of items in the page.
+            List<Book> listBookEntity = pageBook.getContent();
+            List<BookDTO> listBookDTO = new ArrayList<>();
+            for ( Book bookEntity: listBookEntity ) {
+                BookDTO bookDTO = bookConverter.toDTO(bookEntity);
+                listBookDTO.add(bookDTO);
 
             }
 
@@ -428,16 +449,10 @@ public class AdminController {
     public ResponseEntity<ResponseDTO> deletePublisher(@PathVariable(name = "id")long id){
         ResponseDTO response = new ResponseDTO();
         try {
-            Optional<Publisher> optional = publisherService.getPublisherByID(id);
-            if(optional.isEmpty()){
-                response.setErrorCode(ErrorCode.PUBLISHER_NOT_FOUND);
-            }else{
-                Publisher publisherEntity = optional.get();
-                publisherEntity.setDelete(true);
-                publisherService.updatePublisher(publisherEntity,id);
-
-                response.setData(publisherConverter.toDTO(publisherEntity));
+            if(publisherService.deletePublisher(id) > 0){
                 response.setSuccessCode(SuccessCode.PUBLISHER_DELETE_SUCCESS);
+            }else{
+                response.setErrorCode(ErrorCode.PUBLISHER_DELETE_ERROR);
             }
         }catch (Exception e){
             throw new DeleteException(e.getMessage());
@@ -506,21 +521,15 @@ public class AdminController {
         return ResponseEntity.ok().body(respone);
     }
 
-    //Delete publisher
+    //Delete author
     @PutMapping(value = "/delete-author/{id}")
     public ResponseEntity<ResponseDTO> deleteAuthor(@PathVariable(name = "id")long id){
         ResponseDTO response = new ResponseDTO();
         try {
-            Optional<Author> optional = authorService.getAuthorByID(id);
-            if(optional.isEmpty()){
-                response.setErrorCode(ErrorCode.AUTHOR_NOT_FOUND);
-            }else{
-                Author authorEntity = optional.get();
-                authorEntity.setDelete(true);
-                authorService.updateAuthor(authorEntity, id);
-
-                response.setData(authorConverter.toDTO(authorEntity));
+            if(authorService.deleteAuthor(id) > 0){
                 response.setSuccessCode(SuccessCode.AUTHOR_DELETE_SUCCESS);
+            }else{
+                response.setErrorCode(ErrorCode.AUTHOR_DELETE_ERROR);
             }
         }catch (Exception e){
             throw new DeleteException(e.getMessage());

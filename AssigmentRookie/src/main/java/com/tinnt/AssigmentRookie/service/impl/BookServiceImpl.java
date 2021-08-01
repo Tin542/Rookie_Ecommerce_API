@@ -104,7 +104,7 @@ public class BookServiceImpl implements BookService{
 
 	@Override
 	public Book updateBook(Book book, long id)throws UpdateException {
-		Optional<Book> optionalBook = bookRepository.findById(id);
+		Optional<Book> optionalBook = getBookByID(id);
 		Optional<Category> optionalCategory = cateService.getCategoryByName(book.getCategory().getCategoryName());
 		Optional<Publisher> optionalPublisher = publisherService.getPublisherByName(book.getPublisher().getName());
 
@@ -149,5 +149,12 @@ public class BookServiceImpl implements BookService{
 			throw new NotFoundException(ErrorCode.BOOK_FIND_ERROR);
 		}
 		return bookRepository.searchBook(keyword, pageable);
+	}
+
+	@Override
+	public int deleteBook(long id) {
+		getBookByID(id);
+
+		return bookRepository.deleteBook(id);
 	}
 }

@@ -20,4 +20,6 @@ public interface PublisherService {
     public Publisher updatePublisher(Publisher publisher, long id);
 
     public Page<Publisher> searchPublisher(String name, Pageable pageable);
+
+    public int deletePublisher(long id);
 }
