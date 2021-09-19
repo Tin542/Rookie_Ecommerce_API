@@ -3,7 +3,7 @@ package com.tinnt.AssigmentRookie.controller;
 import com.tinnt.AssigmentRookie.constans.ErrorCode;
 import com.tinnt.AssigmentRookie.constans.SuccessCode;
 import com.tinnt.AssigmentRookie.converter.RatingConverter;
-import com.tinnt.AssigmentRookie.dto.RatingDTO;
+import com.tinnt.AssigmentRookie.dto.rate.RatingDTO;
 import com.tinnt.AssigmentRookie.dto.ResponseDTO;
 import com.tinnt.AssigmentRookie.entity.Account;
 import com.tinnt.AssigmentRookie.entity.Rating;

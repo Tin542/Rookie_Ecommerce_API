@@ -1,8 +1,6 @@
 package com.tinnt.AssigmentRookie.converter;
 
-import com.tinnt.AssigmentRookie.dto.CategoryDTO;
-import com.tinnt.AssigmentRookie.dto.RatingDTO;
-import com.tinnt.AssigmentRookie.entity.Category;
+import com.tinnt.AssigmentRookie.dto.rate.RatingDTO;
 import com.tinnt.AssigmentRookie.entity.Rating;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

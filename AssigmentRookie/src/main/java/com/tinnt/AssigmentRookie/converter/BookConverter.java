@@ -1,12 +1,12 @@
 package com.tinnt.AssigmentRookie.converter;
 
-import com.tinnt.AssigmentRookie.dto.HomeDTO;
+import com.tinnt.AssigmentRookie.dto.book.HomeDTO;
 import com.tinnt.AssigmentRookie.entity.Author;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.tinnt.AssigmentRookie.dto.BookDTO;
+import com.tinnt.AssigmentRookie.dto.book.BookDTO;
 import com.tinnt.AssigmentRookie.entity.Book;
 
 import java.util.HashSet;

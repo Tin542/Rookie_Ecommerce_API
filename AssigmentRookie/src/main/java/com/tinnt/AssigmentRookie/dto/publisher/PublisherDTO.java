@@ -1,10 +1,9 @@
-package com.tinnt.AssigmentRookie.dto;
+package com.tinnt.AssigmentRookie.dto.publisher;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import java.sql.Date;
@@ -13,11 +12,11 @@ import java.sql.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthorDTO {
-    private long authorID;
+public class PublisherDTO {
+    private long publisherID;
 
     @NotBlank
-    private String authorName;
+    private String publisherName;
 
     private Date createDate;
     private Date updateDate;

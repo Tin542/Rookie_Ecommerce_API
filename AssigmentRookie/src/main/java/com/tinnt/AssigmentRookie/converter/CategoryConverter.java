@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.tinnt.AssigmentRookie.dto.CategoryDTO;
+import com.tinnt.AssigmentRookie.dto.category.CategoryDTO;
 import com.tinnt.AssigmentRookie.entity.Category;
 
 @Component

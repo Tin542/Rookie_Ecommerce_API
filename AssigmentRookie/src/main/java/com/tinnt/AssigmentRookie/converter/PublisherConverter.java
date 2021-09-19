@@ -1,6 +1,6 @@
 package com.tinnt.AssigmentRookie.converter;
 
-import com.tinnt.AssigmentRookie.dto.PublisherDTO;
+import com.tinnt.AssigmentRookie.dto.publisher.PublisherDTO;
 import com.tinnt.AssigmentRookie.entity.Publisher;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

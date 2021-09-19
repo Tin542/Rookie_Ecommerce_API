@@ -1,4 +1,4 @@
-package com.tinnt.AssigmentRookie.dto;
+package com.tinnt.AssigmentRookie.dto.cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
